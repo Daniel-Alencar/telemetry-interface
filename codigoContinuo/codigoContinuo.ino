@@ -10,7 +10,7 @@ void setup() {
 
 void loop() {
   sensorValue = analogRead(sensorPin);
-  voltage = sensorValue * (5.0 / 1024);
+  voltage = sensorValue * (5.0/1024);
 
   Serial.println(sensorValue);
   delay(1000);
