@@ -13,5 +13,5 @@ void loop() {
   voltage = sensorValue * (5.0 / 1024);
 
   Serial.println(sensorValue);
-  delay(100);
+  delay(1000);
 }

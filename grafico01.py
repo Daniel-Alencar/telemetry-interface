@@ -1,37 +1,24 @@
-#!/usr/bin/python
-# -*- coding: iso-8859-1 -*-
-import time
-import serial
-
+import random
+from itertools import count
 import matplotlib.pyplot as plt
 
-DELAY = 0.100
-DEVICE='/dev/ttyACM0'
-BAUD=9600
+from matplotlib.animation import FuncAnimation
 
-# Iniciando conexao serial
-comport = serial.Serial(DEVICE, BAUD)
-fig, ax = plt.subplots()
+plt.style.use('fivethirtyeight')
 
-def animar():
-  count = 0
-  start = time.time()
-  while count < 10:
-    VALUE_SERIAL = comport.readline().decode()
-    print('\n%s' % (VALUE_SERIAL))
+x_vals = []
+y_vals = []
 
-    data = []
-    timeList = []
-    data.append(int(VALUE_SERIAL))
+index = count()
 
-    end = time.time()
-    timeList.append(end - start)
-
-    time.sleep(DELAY)
-    count += 1
+def animate(i):
+  x_vals.append(next(index))
+  y_vals.append(random.randint(0, 5))
   
-  ax.clear()
-  ax.plot(timeList, data)
+  plt.cla()
+  plt.plot(x_vals, y_vals)
 
-animar()
+animation = FuncAnimation(plt.gcf(), animate, interval=1000)
+
+plt.tight_layout()
 plt.show()
