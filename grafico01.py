@@ -4,7 +4,6 @@ import time
 import serial
 
 import matplotlib.pyplot as plt
-from matplotlib import animation
 
 DELAY = 0.100
 DEVICE='/dev/ttyACM0'
