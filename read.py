@@ -1,9 +1,10 @@
-#!/usr/bin/python
+#!/media/engenheiro/Arquivos Linux/Documents/Jobs/Cactus rockets/TRAINEE/Telemetria/Interface/TelemetryENV/bin/python3
 # -*- coding: iso-8859-1 -*-
+
 import time
 import serial
  
-DELAY = 0.000
+DELAY = 0.010
 DEVICE='/dev/ttyACM0'
 BAUD=9600
 

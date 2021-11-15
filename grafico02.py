@@ -1,13 +1,15 @@
+#!/media/engenheiro/Arquivos Linux/Documents/Jobs/Cactus rockets/TRAINEE/Telemetria/Interface/TelemetryENV/bin/python3
+# -*- coding: iso-8859-1 -*-
+
 from itertools import count
 import matplotlib.pyplot as plt
-
 from matplotlib.animation import FuncAnimation
 
 import serial
 
-DELAY = 100
-DEVICE='/dev/ttyACM0'
-BAUD=9600
+DELAY = 0
+DEVICE = '/dev/ttyACM0'
+BAUD = 9600
 
 figure, axes = plt.subplots(ncols=2, nrows=2)
 plt.style.use('fivethirtyeight')
@@ -24,8 +26,6 @@ def animate(i):
 
   valueSerial = getValue()
   y_vals.append(valueSerial)
-
-  print(valueSerial)
   
   axes[0, 0].clear()
   axes[0, 1].clear()
@@ -46,6 +46,7 @@ def isnumber(value):
 
 def getValue():
   VALUE_SERIAL = (arduinoData.readline().decode())
+  print(VALUE_SERIAL)
   
   if isnumber(VALUE_SERIAL) and VALUE_SERIAL != None:
     return int(VALUE_SERIAL)

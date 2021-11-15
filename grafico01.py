@@ -1,3 +1,6 @@
+#!/media/engenheiro/Arquivos Linux/Documents/Jobs/Cactus rockets/TRAINEE/Telemetria/Interface/TelemetryENV/bin/python3
+# -*- coding: iso-8859-1 -*-
+
 import random
 from itertools import count
 import matplotlib.pyplot as plt
