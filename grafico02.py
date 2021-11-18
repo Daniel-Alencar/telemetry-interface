@@ -9,7 +9,7 @@ import serial
 
 DELAY = 0
 DEVICE = '/dev/ttyACM0'
-BAUD = 115200
+BAUD = 9600
 
 figure, axes = plt.subplots(ncols=1, nrows=1)
 plt.style.use('fivethirtyeight')
@@ -38,15 +38,14 @@ def isnumber(value):
   return True
 
 def getValue():
-  VALUE_SERIAL = str()
+  string = ""
   if arduinoData.isOpen():
-    VALUE_SERIAL = (arduinoData.readline().decode())
-  else:
-    VALUE_SERIAL = 512
-  print(VALUE_SERIAL)
-
-  if isnumber(VALUE_SERIAL):
-    return int(VALUE_SERIAL)
+    bytesToRead = arduinoData.inWaiting()
+    string = arduinoData.read(bytesToRead).decode()
+    
+  print(string)
+  if isnumber(string):
+    return float(string)
 
 
 animation = FuncAnimation(figure, update, interval=DELAY)
