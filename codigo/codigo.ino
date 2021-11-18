@@ -7,12 +7,9 @@ void setup(){
 }
  
 void loop(){
-    if (Serial.available() > 0){
-        if (Serial.read() == 116) {
+
             valAnalog = analogRead(PinAnalogLM35);
-            temp = (valAnalog * 500) / 1023;
-            Serial.print("o valor é: ");
-            Serial.println(temp);
-        }
-    }
+
+            Serial.println(valAnalog);
+            delay(100);
 }

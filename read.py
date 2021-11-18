@@ -4,18 +4,23 @@
 import time
 import serial
  
-DELAY = 0.010
+DELAY = 0.000
 DEVICE='/dev/ttyACM0'
 BAUD=9600
+
+1024.00
 
 # Iniciando conexao serial
 comport = serial.Serial(DEVICE, BAUD)
 
 while comport.isOpen():
-  VALUE_SERIAL=comport.readline()
-  print('\n%s' % (VALUE_SERIAL.decode()))
-
+  string = ""
+  value = comport.read().decode()
+  string = string + value
+  while value != '\n':
+    value = comport.read().decode()
+    string = string + value
+  print(string)
   time.sleep(DELAY)
- 
-# Fechando conexao serial
+
 comport.close()

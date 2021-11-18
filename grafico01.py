@@ -7,21 +7,30 @@ import matplotlib.pyplot as plt
 
 from matplotlib.animation import FuncAnimation
 
-plt.style.use('fivethirtyeight')
+DELAY = 0
 
-x_vals = []
-y_vals = []
+figure, axes = plt.subplots()
+xdata, ydata = [], []
+
+plt.style.use('fivethirtyeight')
+line, = plt.plot([], [])
 
 index = count()
 
-def animate(i):
-  x_vals.append(next(index))
-  y_vals.append(random.randint(0, 5))
-  
-  plt.cla()
-  plt.plot(x_vals, y_vals)
+def init():
+  axes.set_xlim(0, 1000)
+  axes.set_ylim(0, 6)
+  return line,
 
-animation = FuncAnimation(plt.gcf(), animate, interval=1000)
+def update(frame):
+
+  xdata.append(next(index))
+  ydata.append(random.randint(0, 5))
+
+  line.set_data(xdata, ydata)
+  return line,
+
+animation = FuncAnimation(figure, update, init_func=init, blit=True, interval=DELAY)
 
 plt.tight_layout()
 plt.show()

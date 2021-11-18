@@ -4,7 +4,7 @@ int sensorValue = 0;
 float voltage;
 
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(115200);
   delay(100);
 }
 
@@ -13,5 +13,5 @@ void loop() {
   voltage = sensorValue * (5.0/1024);
 
   Serial.println(sensorValue);
-  delay(10);
+  delay(100);
 }

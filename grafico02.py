@@ -9,9 +9,9 @@ import serial
 
 DELAY = 0
 DEVICE = '/dev/ttyACM0'
-BAUD = 9600
+BAUD = 115200
 
-figure, axes = plt.subplots(ncols=2, nrows=2)
+figure, axes = plt.subplots(ncols=1, nrows=1)
 plt.style.use('fivethirtyeight')
 
 x_vals = []
@@ -21,21 +21,14 @@ index = count()
 
 arduinoData = serial.Serial(DEVICE, BAUD)
 
-def animate(i):
-  x_vals.append(next(index))
-
+def update(frame):
   valueSerial = getValue()
-  y_vals.append(valueSerial)
-  
-  axes[0, 0].clear()
-  axes[0, 1].clear()
-  axes[1, 0].clear()
-  axes[1, 1].clear()
+  if valueSerial != None:
+    x_vals.append(next(index))
+    y_vals.append(valueSerial)
 
-  axes[0, 0].plot(x_vals, y_vals)
-  axes[0, 1].plot(x_vals, y_vals)
-  axes[1, 0].plot(x_vals, y_vals)
-  axes[1, 1].plot(x_vals, y_vals)
+  plt.cla()
+  plt.plot(x_vals, y_vals)
 
 def isnumber(value):
   try:
@@ -45,14 +38,18 @@ def isnumber(value):
   return True
 
 def getValue():
-  VALUE_SERIAL = (arduinoData.readline().decode())
+  VALUE_SERIAL = str()
+  if arduinoData.isOpen():
+    VALUE_SERIAL = (arduinoData.readline().decode())
+  else:
+    VALUE_SERIAL = 512
   print(VALUE_SERIAL)
-  
-  if isnumber(VALUE_SERIAL) and VALUE_SERIAL != None:
+
+  if isnumber(VALUE_SERIAL):
     return int(VALUE_SERIAL)
 
 
-animation = FuncAnimation(plt.gcf(), animate, interval=DELAY)
+animation = FuncAnimation(figure, update, interval=DELAY)
 
 plt.tight_layout()
 plt.show()
