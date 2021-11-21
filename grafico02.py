@@ -24,7 +24,8 @@ arduinoData = serial.Serial(DEVICE, BAUD)
 def update(frame):
   valueSerial = getValue()
   if valueSerial != None:
-    x_vals.append(next(index))
+    c = next(index)
+    x_vals.append(c)
     y_vals.append(valueSerial)
 
   plt.cla()
