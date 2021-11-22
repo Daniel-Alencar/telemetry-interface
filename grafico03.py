@@ -16,13 +16,9 @@ plt.style.use('fivethirtyeight')
 
 x_vals = []
 y_vals = []
-line, = plt.plot([], [])
 
 index = count()
 arduinoData = serial.Serial(DEVICE, BAUD)
-
-def init():
-  return line,
 
 def update(frame):
   valueSerial = getValue()
@@ -33,15 +29,9 @@ def update(frame):
     y_vals.append(valueSerial)
   
   plt.cla()
-  plt.autoscale()
-
-  if count >= 50:
-    axes.set_xlim(x_vals[count - 50], x_vals[count])
   
-  line.set_data(x_vals, y_vals)
   plt.tight_layout()
   plt.plot(x_vals, y_vals, scalex=True)
-  return line,
 
 def isnumber(value):
   try:
@@ -60,8 +50,7 @@ def getValue():
   if isnumber(string):
     return float(string)
 
-
-animation = FuncAnimation(figure, init_func=init, func=update, blit=False, interval=DELAY)
+animation = FuncAnimation(figure, func=update, blit=False, interval=DELAY)
 
 plt.tight_layout()
 plt.show()
