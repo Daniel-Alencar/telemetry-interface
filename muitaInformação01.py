@@ -7,15 +7,15 @@ from matplotlib.animation import FuncAnimation
 
 import serial
 
-DELAY = 10
+DELAY = 1000
 DEVICE = '/dev/ttyACM0'
 BAUD = 9600
 
-figure, axes = plt.subplots(ncols=1, nrows=1)
+figure, axes = plt.subplots(ncols=1, nrows=2)
 plt.style.use('fivethirtyeight')
 
-x_vals = []
-y_vals = []
+x_vals = [[],[]]
+y_vals = [[],[]]
 
 index = count()
 arduinoData = serial.Serial(DEVICE, BAUD)
@@ -23,15 +23,21 @@ arduinoData = serial.Serial(DEVICE, BAUD)
 def update(frame):
   valueSerial = getValue()
   count = 0
-  if valueSerial != None:
-    count = next(index)
-    x_vals.append(count)
-    y_vals.append(valueSerial)
+
+  count = next(index)
+  for c in range(2):
+    print("Value C:", c)
+    if valueSerial[c] != None:
+      x_vals[c].append(count)
+      y_vals[c].append(valueSerial[c])
   
   plt.cla()
   
   plt.tight_layout()
-  plt.plot(x_vals, y_vals, scalex=True)
+  axes[0].clear()
+  axes[1].clear()
+  axes[0].plot(x_vals[0], y_vals[0])
+  axes[1].plot(x_vals[1], y_vals[1])
 
 def isnumber(value):
   try:
@@ -45,10 +51,16 @@ def getValue():
   if arduinoData.isOpen():
     bytesToRead = arduinoData.inWaiting()
     string = arduinoData.read(bytesToRead).decode()
-  
+    
   print(string)
-  if isnumber(string):
-    return float(string)
+  arrayString = string.split(',')
+  arrayNumber = []
+
+  for value in arrayString:
+    if isnumber(value):
+      arrayNumber.append(float(value))
+  print("Length:", arrayNumber.__len__())
+  return arrayNumber
 
 animation = FuncAnimation(figure, func=update, blit=False, interval=DELAY)
 

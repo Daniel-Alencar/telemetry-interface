@@ -1,1 +1,7 @@
-É necessário ainda fazer com que alguns dados sejam "ignorados" da serial, pois, pelo que percebi, os dados são buscados na ordem e por isso, há um atraso enorme quando o código do arduino não tem um delay considerável em relação ao do código da interface.
+1 - Ajeitar a leitura da serial
+2 - resolver problema do cla()
+3 - Scroll do gráfico
+4 - Resolver problema dos 'drops' do gráfico
+
+
+

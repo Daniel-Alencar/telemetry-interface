@@ -1,12 +1,56 @@
 #!/media/engenheiro/Arquivos Linux/Documents/Jobs/Cactus rockets/TRAINEE/Telemetria/Interface/TelemetryENV/bin/python3
 # -*- coding: iso-8859-1 -*-
 
-import matplotlib.pyplot as plt
-import matplotlib.patheffects as path_effects
+"""
+=====
+Decay
+=====
 
-fig = plt.figure(figsize=(5, 1.5))
-text = fig.text(0.5, 0.5, 'Hello path effects world!\nThis is the normal '
-                          'path effect.\nPretty dull, huh?',
-                ha='center', va='center', size=20)
-text.set_path_effects([path_effects.Normal()])
+This example showcases a sinusoidal decay animation.
+"""
+
+
+import numpy as np
+import matplotlib.pyplot as plt
+import matplotlib.animation as animation
+
+
+def data_gen(t=0):
+    cnt = 0
+    while cnt < 1000:
+        cnt += 1
+        t += 0.1
+        yield t, np.sin(2*np.pi*t) * np.exp(-t/10.)
+
+
+def init():
+    ax.set_ylim(-1.1, 1.1)
+    ax.set_xlim(0, 10)
+    del xdata[:]
+    del ydata[:]
+    line.set_data(xdata, ydata)
+    return line,
+
+fig, ax = plt.subplots()
+line, = ax.plot([], [], lw=2)
+ax.grid()
+xdata, ydata = [], []
+
+
+def run(data):
+    # update the data
+    t, y = data
+    xdata.append(t)
+    ydata.append(y)
+    xmin, xmax = ax.get_xlim()
+
+    if t >= xmax:
+        ax.set_xlim(xmin, 2*xmax)
+        ax.figure.canvas.draw()
+    line.set_data(xdata, ydata)
+
+    return line,
+
+ani = animation.FuncAnimation(fig, run, data_gen, blit=False, interval=10,
+                              repeat=False, init_func=init)
 plt.show()
