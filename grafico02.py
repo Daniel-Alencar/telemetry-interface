@@ -7,7 +7,7 @@ from matplotlib.animation import FuncAnimation
 
 import serial
 
-DELAY = 0
+DELAY = 10
 DEVICE = '/dev/ttyACM0'
 BAUD = 9600
 
@@ -21,15 +21,24 @@ index = count()
 
 arduinoData = serial.Serial(DEVICE, BAUD)
 
+def init():
+  axes.set_xlim(0, 50)
+
 def update(frame):
   valueSerial = getValue()
+  count = 0
   if valueSerial != None:
-    c = next(index)
-    x_vals.append(c)
+    count = next(index)
+    x_vals.append(count)
     y_vals.append(valueSerial)
-
+  
   plt.cla()
+
+  if count >= 50:
+    axes.set_xlim(x_vals[count - 50], x_vals[count])
+  
   plt.plot(x_vals, y_vals)
+  plt.tight_layout()
 
 def isnumber(value):
   try:
@@ -49,7 +58,7 @@ def getValue():
     return float(string)
 
 
-animation = FuncAnimation(figure, update, interval=DELAY)
+animation = FuncAnimation(figure, init_func=init, func=update, interval=DELAY)
 
 plt.tight_layout()
 plt.show()
