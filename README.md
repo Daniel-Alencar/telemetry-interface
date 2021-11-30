@@ -1,4 +1,4 @@
 ## Problemas
-- [] Scroll do gráfico
+- [ ] Scroll do gráfico
 
-- [] Resolver problema dos 'drops' do gráfico da muitaInformação
+- [ ] Resolver problema dos 'drops' do gráfico da muitaInformação
