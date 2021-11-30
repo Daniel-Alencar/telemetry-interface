@@ -9,9 +9,11 @@ void setup() {
 }
 
 void loop() {
+  char str[10];
   sensorValue = analogRead(sensorPin);
   voltage = sensorValue * (5.0/1024);
-
-  Serial.println(sensorValue);
-  delay(1000);
+  
+  sprintf(str, "%05d\n", sensorValue);
+  Serial.print(str);
+  delay(10);
 }

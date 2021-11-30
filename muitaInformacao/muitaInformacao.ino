@@ -12,9 +12,11 @@ void loop() {
   sensorValue = analogRead(sensorPin);
   voltage = sensorValue * (5.0/1024);
 
-  String result;
-  result = String(sensorValue) + "," + String(voltage) + "," + String(sensorValue) + "," + String(voltage);
-  Serial.println(result);
+  char result[29];
+  String voltageString = String(voltage, 5);
+
+  sprintf(result, "%05d,%s,%05d,%s\n", sensorValue, voltageString.c_str(), sensorValue, voltageString.c_str());
+  Serial.print(result);
   
-  delay(1000);
+  delay(250);
 }
