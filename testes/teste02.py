@@ -1,5 +1,3 @@
-#!/media/engenheiro/Arquivos Linux/Documents/Jobs/Cactus rockets/TRAINEE/Telemetria/Interface/TelemetryENV/bin/python3
-# -*- coding: iso-8859-1 -*-
 
 import numpy as np
 import matplotlib.pyplot as plt

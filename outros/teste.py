@@ -1,14 +1,3 @@
-#!/media/engenheiro/Arquivos Linux/Documents/Jobs/Cactus rockets/TRAINEE/Telemetria/Interface/TelemetryENV/bin/python3
-# -*- coding: iso-8859-1 -*-
-
-"""
-=====
-Decay
-=====
-
-This example showcases a sinusoidal decay animation.
-"""
-
 
 import numpy as np
 import matplotlib.pyplot as plt

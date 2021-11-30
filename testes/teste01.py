@@ -1,14 +1,3 @@
-#!/media/engenheiro/Arquivos Linux/Documents/Jobs/Cactus rockets/TRAINEE/Telemetria/Interface/TelemetryENV/bin/python3
-# -*- coding: iso-8859-1 -*-
-
-###################################################################
-#                                                                 #
-#                    PLOT A LIVE GRAPH (PyQt5)                    #
-#                  -----------------------------                  #
-#            EMBED A MATPLOTLIB ANIMATION INSIDE YOUR             #
-#            OWN GUI!                                             #
-#                                                                 #
-###################################################################
 
 import sys
 import os
