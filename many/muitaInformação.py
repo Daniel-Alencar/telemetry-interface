@@ -14,24 +14,15 @@ figure, axes = plt.subplots(ncols=2, nrows=2)
 x_vals = [[],[]]
 y_vals = [[],[]]
 
-index = count()
 arduinoData = serial.Serial(DEVICE, BAUD, timeout=5)
 
-def update(frame):
-  valueSerial = getValue()
+end = time.time()
 
-  count = next(index)
-  for c in range(2):
-    print("Value C:", c)
-    if valueSerial[c] != None:
-      x_vals[c].append(count)
-      y_vals[c].append(valueSerial[c])
+def init():
   
-  print("=========================================================================")
-  
-  axes[0, 0].clear()
-  axes[0, 1].clear()
-  axes[1, 0].clear()
+  axes[0, 0].set_ylim(0, 1023)
+  axes[0, 1].set_ylim(0, 5)
+  axes[1, 0].set_ylim(0, 1023)
 
   axes[0, 0].set_title("Altitude sensor")
   axes[0, 0].set_xlabel("Time")
@@ -45,7 +36,24 @@ def update(frame):
   axes[1, 0].set_xlabel("Time")
   axes[1, 0].set_ylabel("Aceleration (m/s^2)")
 
+
+def update(frame):
+  valueSerial = getValue()
+
+  count = time.time() - end
+  for c in range(2):
+    print("Value C:", c)
+    if valueSerial[c] != None:
+      x_vals[c].append(count)
+      y_vals[c].append(valueSerial[c])
   
+  print("=========================================================================")
+  
+  axes[0, 0].cla()
+  axes[0, 1].cla()
+  axes[1, 0].cla()
+
+  init()
   plt.tight_layout()
 
   axes[0, 0].plot(x_vals[0], y_vals[0])
@@ -77,7 +85,7 @@ def getValue():
   print(arrayNumber)
   return arrayNumber
 
-animation = FuncAnimation(figure, func=update, blit=False, interval=DELAY)
+animation = FuncAnimation(figure, func=update, init_func=init, blit=False, interval=DELAY)
 
 plt.tight_layout()
 plt.show()
