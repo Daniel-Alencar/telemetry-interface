@@ -9,8 +9,7 @@ DELAY = 500
 DEVICE = '/dev/ttyACM0'
 BAUD = 9600
 
-figure, axes = plt.subplots(ncols=1, nrows=2)
-plt.style.use('fivethirtyeight')
+figure, axes = plt.subplots(ncols=2, nrows=2)
 
 x_vals = [[],[]]
 y_vals = [[],[]]
@@ -29,13 +28,30 @@ def update(frame):
       y_vals[c].append(valueSerial[c])
   
   print("=========================================================================")
-  plt.cla()
+  
+  axes[0, 0].clear()
+  axes[0, 1].clear()
+  axes[1, 0].clear()
+
+  axes[0, 0].set_title("Altitude sensor")
+  axes[0, 0].set_xlabel("Time")
+  axes[0, 0].set_ylabel("Altitude (m)")
+
+  axes[0, 1].set_title("Temperature sensor")
+  axes[0, 1].set_xlabel("Time")
+  axes[0, 1].set_ylabel("Temperature (K)")
+
+  axes[1, 0].set_title("Acelerometer sensor")
+  axes[1, 0].set_xlabel("Time")
+  axes[1, 0].set_ylabel("Aceleration (m/s^2)")
+
   
   plt.tight_layout()
-  axes[0].clear()
-  axes[1].clear()
-  axes[0].plot(x_vals[0], y_vals[0])
-  axes[1].plot(x_vals[1], y_vals[1])
+
+  axes[0, 0].plot(x_vals[0], y_vals[0])
+  axes[0, 1].plot(x_vals[1], y_vals[1])
+  axes[1, 0].plot(x_vals[0], y_vals[0])
+
 
 def isnumber(value):
   try:
