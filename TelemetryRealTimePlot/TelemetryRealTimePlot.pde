@@ -21,10 +21,7 @@ int paddingX = 200;
 int paddingY = 150;
 int initialPositionX = 170;
 int initialPositionY = 70;
-Graph LineGraph = new Graph(initialPositionX, initialPositionY, widthGraph, heightGraph, color (20, 20, 200));
-Graph LineGraph1 = new Graph(initialPositionX + widthGraph + paddingX, initialPositionY, widthGraph, heightGraph, color (20, 20, 200));
-Graph LineGraph2 = new Graph(initialPositionX, initialPositionY + heightGraph + paddingY, widthGraph, heightGraph, color (20, 20, 200));
-Graph LineGraph3 = new Graph(initialPositionX + widthGraph + paddingX, initialPositionY + heightGraph + paddingY, widthGraph, heightGraph, color (20, 20, 200));
+Graph[] LineGraph = new Graph[4];
 
 float[][] lineGraphValues = new float[6][100];
 float[] lineGraphSampleNumbers = new float[100];
@@ -36,9 +33,16 @@ String topSketchPath = "";
 byte[] inBuffer = new byte[100]; // holds serial message
 int i = 0;
 
+float timePerGraphLength = 4.80;
+
 void setup() {
+  LineGraph[0] = new Graph(initialPositionX, initialPositionY, widthGraph, heightGraph, color (20, 20, 200));
+  LineGraph[1] = new Graph(initialPositionX + widthGraph + paddingX, initialPositionY, widthGraph, heightGraph, color (20, 20, 200));
+  LineGraph[2] = new Graph(initialPositionX, initialPositionY + heightGraph + paddingY, widthGraph, heightGraph, color (20, 20, 200));
+  LineGraph[3] = new Graph(initialPositionX + widthGraph + paddingX, initialPositionY + heightGraph + paddingY, widthGraph, heightGraph, color (20, 20, 200));
+  
   surface.setTitle("Telemetry Interface");
-  size(1100, 600);
+  size(1100, 625);
 
   // set line graph colors
   graphColors[0] = color(131, 255, 20);
@@ -82,9 +86,16 @@ void setup() {
   cp5.addToggle("lgVisible4").setPosition(x, y += spacing).setValue(int(getPlotterConfigString("lgVisible4"))).setMode(ControlP5.SWITCH).setColorActive(graphColors[3]);
   cp5.addToggle("lgVisible5").setPosition(x, y += spacing).setValue(int(getPlotterConfigString("lgVisible5"))).setMode(ControlP5.SWITCH).setColorActive(graphColors[4]);
   cp5.addToggle("lgVisible6").setPosition(x, y += spacing).setValue(int(getPlotterConfigString("lgVisible6"))).setMode(ControlP5.SWITCH).setColorActive(graphColors[5]);
+  y = y + spacing;
   
-  cp5.addTextfield("lgMinY").setPosition(x, y +=spacing).setText(getPlotterConfigString("lgMinY")).setColorCaptionLabel(0).setWidth(40).setAutoClear(false);
-  cp5.addTextfield("lgMaxY").setPosition(x, y +=spacing).setText(getPlotterConfigString("lgMaxY")).setColorCaptionLabel(0).setWidth(40).setAutoClear(false);
+  cp5.addTextfield("lgMinY1").setPosition(x, y +=spacing).setText(getPlotterConfigString("lgMinY1")).setColorCaptionLabel(0).setWidth(40).setAutoClear(false);
+  cp5.addTextfield("lgMaxY1").setPosition(x, y +=spacing).setText(getPlotterConfigString("lgMaxY1")).setColorCaptionLabel(0).setWidth(40).setAutoClear(false);
+  cp5.addTextfield("lgMinY2").setPosition(x, y +=spacing).setText(getPlotterConfigString("lgMinY2")).setColorCaptionLabel(0).setWidth(40).setAutoClear(false);
+  cp5.addTextfield("lgMaxY2").setPosition(x, y +=spacing).setText(getPlotterConfigString("lgMaxY2")).setColorCaptionLabel(0).setWidth(40).setAutoClear(false);
+  cp5.addTextfield("lgMinY3").setPosition(x, y +=spacing).setText(getPlotterConfigString("lgMinY3")).setColorCaptionLabel(0).setWidth(40).setAutoClear(false);
+  cp5.addTextfield("lgMaxY3").setPosition(x, y +=spacing).setText(getPlotterConfigString("lgMaxY3")).setColorCaptionLabel(0).setWidth(40).setAutoClear(false);
+  cp5.addTextfield("lgMinY4").setPosition(x, y +=spacing).setText(getPlotterConfigString("lgMinY4")).setColorCaptionLabel(0).setWidth(40).setAutoClear(false);
+  cp5.addTextfield("lgMaxY4").setPosition(x, y +=spacing).setText(getPlotterConfigString("lgMaxY4")).setColorCaptionLabel(0).setWidth(40).setAutoClear(false);
 }
 
 // loop variable
@@ -124,30 +135,64 @@ void draw(){
   }
 
   // draw the line graphs
-  LineGraph.DrawAxis();
-  LineGraph1.DrawAxis();
-  LineGraph2.DrawAxis();
-  LineGraph3.DrawAxis();
+  LineGraph[0].DrawAxis();
+  LineGraph[1].DrawAxis();
+  LineGraph[2].DrawAxis();
+  LineGraph[3].DrawAxis();
   
   // lineGraphValues.length == 6
   // Devemos mudar esta parte para usar vários gráficos
   for(int i = 0; i < lineGraphValues.length; i++) {
-    LineGraph.GraphColor = graphColors[i];
-    if(int(getPlotterConfigString("lgVisible" + (i + 1))) == 1)
-      LineGraph.LineGraph(lineGraphSampleNumbers, lineGraphValues[i]);
+    if(i < 4) {
+      LineGraph[i].GraphColor = graphColors[i];
+      
+      if(int(getPlotterConfigString("lgVisible" + (i + 1))) == 1) {
+        LineGraph[i].LineGraph(lineGraphSampleNumbers, lineGraphValues[i]);
+        LineGraph[i].xMax = millis() / 1000;
+        LineGraph[i].xMin = LineGraph[i].xMax - timePerGraphLength;
+      }
+    }
   }
 }
 
 // called each time the chart settings are changed by the user 
 void setChartSettings() {
-  LineGraph.xLabel = "Samples";
-  LineGraph.yLabel = "Value";
-  LineGraph.Title = "Samples x Value";  
-  LineGraph.xDiv = 5;  
-  LineGraph.xMax = 0; 
-  LineGraph.xMin = -100;  
-  LineGraph.yMax = int(getPlotterConfigString("lgMaxY")); 
-  LineGraph.yMin = int(getPlotterConfigString("lgMinY"));
+  int currentTime = millis() / 1000;
+  LineGraph[0].xLabel = "Time(s)";
+  LineGraph[0].yLabel = "Value(m)";
+  LineGraph[0].Title = "Altitude";  
+  LineGraph[0].xDiv = 5;  
+  LineGraph[3].xMax = currentTime;
+  LineGraph[3].xMin = LineGraph[3].xMax - timePerGraphLength; 
+  LineGraph[0].yMax = int(getPlotterConfigString("lgMaxY1")); 
+  LineGraph[0].yMin = int(getPlotterConfigString("lgMinY1"));
+  
+  LineGraph[1].xLabel = "Time(s)";
+  LineGraph[1].yLabel = "Value(K)";
+  LineGraph[1].Title = "Temperature";  
+  LineGraph[1].xDiv = 5;  
+  LineGraph[3].xMax = currentTime;
+  LineGraph[3].xMin = LineGraph[3].xMax - timePerGraphLength; 
+  LineGraph[1].yMax = int(getPlotterConfigString("lgMaxY2")); 
+  LineGraph[1].yMin = int(getPlotterConfigString("lgMinY2"));
+  
+  LineGraph[2].xLabel = "Time(s)";
+  LineGraph[2].yLabel = "Value(atm)";
+  LineGraph[2].Title = "Pressure";  
+  LineGraph[2].xDiv = 5;  
+  LineGraph[3].xMax = currentTime;
+  LineGraph[3].xMin = LineGraph[3].xMax - timePerGraphLength;  
+  LineGraph[2].yMax = int(getPlotterConfigString("lgMaxY3")); 
+  LineGraph[2].yMin = int(getPlotterConfigString("lgMinY3"));
+  
+  LineGraph[3].xLabel = "Time(s)";
+  LineGraph[3].yLabel = "Value(m/s²)";
+  LineGraph[3].Title = "Acceleration";  
+  LineGraph[3].xDiv = 5;
+  LineGraph[3].xMax = currentTime;
+  LineGraph[3].xMin = LineGraph[3].xMax - timePerGraphLength;  
+  LineGraph[3].yMax = int(getPlotterConfigString("lgMaxY4")); 
+  LineGraph[3].yMin = int(getPlotterConfigString("lgMinY4"));
 }
 
 // handle gui actions

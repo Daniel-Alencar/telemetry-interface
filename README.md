@@ -4,9 +4,9 @@
 
 - [X] Scroll do gráfico
 
-- [X] Resolver problema dos 'drops' do gráfico da muitaInformação
-
 - [X] Criar janela própria
+
+- [ ] Último gráfico não está funcionando quando chega no valor máximo em Y
 
 - [ ] Otimizar
 
