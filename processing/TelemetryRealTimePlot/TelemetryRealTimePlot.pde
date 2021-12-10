@@ -38,6 +38,7 @@ int i = 0;
 float timePerGraphLength = 4.80;
 
 void setup() {
+  // must conform to the number defined by 'graphsNumber'
   LineGraph[0] = new Graph(initialPositionX, initialPositionY, widthGraph, heightGraph, color (20, 20, 200));
   LineGraph[1] = new Graph(initialPositionX + widthGraph + paddingX, initialPositionY, widthGraph, heightGraph, color (20, 20, 200));
   LineGraph[2] = new Graph(initialPositionX, initialPositionY + heightGraph + paddingY, widthGraph, heightGraph, color (20, 20, 200));
@@ -130,13 +131,14 @@ void draw(){
   }
 
   // draw the line graphs
+  // must conform to the number defined by 'graphsNumber'
   LineGraph[0].DrawAxis();
   LineGraph[1].DrawAxis();
   LineGraph[2].DrawAxis();
   LineGraph[3].DrawAxis();
   
   for(int i = 0; i < lineGraphValues.length; i++) {
-    if(i < 4) {
+    if(i < graphsNumber) {
       LineGraph[i].GraphColor = graphColors[i];
       
       if(int(getPlotterConfigString("lgVisible" + (i + 1))) == 1) {
