@@ -2,11 +2,11 @@
 
 - [X] Set Labels and titles
 
-- [ ] Scroll do gráfico
+- [X] Scroll do gráfico
 
-- [ ] Resolver problema dos 'drops' do gráfico da muitaInformação
+- [X] Resolver problema dos 'drops' do gráfico da muitaInformação
 
-- [ ] Criar janela própria
+- [X] Criar janela própria
 
 - [ ] Otimizar
 
