@@ -5,7 +5,7 @@ import controlP5.*; // http://www.sojamo.de/libraries/controlP5/
 import processing.serial.*;
 
 // Serial port to connect to
-String serialPortName = "COM3";
+String serialPortName = Serial.list()[0];
 
 Serial serialPort; // Serial port object
 
@@ -16,7 +16,15 @@ ControlP5 cp5;
 JSONObject plotterConfigJSON;
 
 // plots
-Graph LineGraph = new Graph(170, 70, 600, 250, color (20, 20, 200));
+int heightGraph = 125, widthGraph = 300;
+int paddingX = 200;
+int initialPositionX = 170;
+int initialPositionY = 70;
+Graph LineGraph = new Graph(initialPositionX, initialPositionY, widthGraph, heightGraph, color (20, 20, 200));
+Graph LineGraph1 = new Graph(initialPositionX + widthGraph + paddingX, initialPositionY, widthGraph, heightGraph, color (20, 20, 200));
+Graph LineGraph2 = new Graph(initialPositionX, initialPositionY + heightGraph + paddingX, widthGraph, heightGraph, color (20, 20, 200));
+Graph LineGraph3 = new Graph(initialPositionX + widthGraph + paddingX, initialPositionY + heightGraph + paddingX, widthGraph, heightGraph, color (20, 20, 200));
+
 float[][] lineGraphValues = new float[6][100];
 float[] lineGraphSampleNumbers = new float[100];
 color[] graphColors = new color[6];
@@ -29,7 +37,7 @@ int i = 0;
 
 void setup() {
   surface.setTitle("Telemetry Interface");
-  size(900, 400);
+  size(1100, 600);
 
   // set line graph colors
   graphColors[0] = color(131, 255, 20);
@@ -106,6 +114,8 @@ void draw(){
 
   // draw the line graphs
   LineGraph.DrawAxis();
+  LineGraph1.DrawAxis();
+  LineGraph2.DrawAxis();
   for(int i = 0; i < lineGraphValues.length; i++) {
     LineGraph.GraphColor = graphColors[i];
     if(int(getPlotterConfigString("lgVisible" + (i + 1))) == 1)

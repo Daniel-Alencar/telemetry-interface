@@ -4,7 +4,7 @@ int sensorValue = 0;
 float voltage;
 
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(115200);
   delay(100);
 }
 
