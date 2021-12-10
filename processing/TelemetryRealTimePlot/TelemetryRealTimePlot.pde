@@ -158,8 +158,8 @@ void setChartSettings() {
   LineGraph[0].yLabel = "Value(m)";
   LineGraph[0].Title = "Altitude";  
   LineGraph[0].xDiv = 5;  
-  LineGraph[3].xMax = currentTime;
-  LineGraph[3].xMin = LineGraph[3].xMax - timePerGraphLength; 
+  LineGraph[0].xMax = currentTime;
+  LineGraph[0].xMin = LineGraph[3].xMax - timePerGraphLength; 
   LineGraph[0].yMax = int(getPlotterConfigString("lgMaxY1")); 
   LineGraph[0].yMin = int(getPlotterConfigString("lgMinY1"));
   
@@ -167,8 +167,8 @@ void setChartSettings() {
   LineGraph[1].yLabel = "Value(K)";
   LineGraph[1].Title = "Temperature";  
   LineGraph[1].xDiv = 5;  
-  LineGraph[3].xMax = currentTime;
-  LineGraph[3].xMin = LineGraph[3].xMax - timePerGraphLength; 
+  LineGraph[1].xMax = currentTime;
+  LineGraph[1].xMin = LineGraph[3].xMax - timePerGraphLength; 
   LineGraph[1].yMax = int(getPlotterConfigString("lgMaxY2")); 
   LineGraph[1].yMin = int(getPlotterConfigString("lgMinY2"));
   
@@ -176,8 +176,8 @@ void setChartSettings() {
   LineGraph[2].yLabel = "Value(atm)";
   LineGraph[2].Title = "Pressure";  
   LineGraph[2].xDiv = 5;  
-  LineGraph[3].xMax = currentTime;
-  LineGraph[3].xMin = LineGraph[3].xMax - timePerGraphLength;  
+  LineGraph[2].xMax = currentTime;
+  LineGraph[2].xMin = LineGraph[3].xMax - timePerGraphLength;  
   LineGraph[2].yMax = int(getPlotterConfigString("lgMaxY3")); 
   LineGraph[2].yMin = int(getPlotterConfigString("lgMinY3"));
   
