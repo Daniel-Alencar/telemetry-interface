@@ -1,7 +1,7 @@
 // import libraries
 import java.awt.Frame;
 import java.awt.BorderLayout;
-import controlP5.*; // http://www.sojamo.de/libraries/controlP5/
+import controlP5.*;
 import processing.serial.*;
 
 // Serial port to connect to
@@ -18,12 +18,13 @@ JSONObject plotterConfigJSON;
 // plots
 int heightGraph = 125, widthGraph = 300;
 int paddingX = 200;
+int paddingY = 150;
 int initialPositionX = 170;
 int initialPositionY = 70;
 Graph LineGraph = new Graph(initialPositionX, initialPositionY, widthGraph, heightGraph, color (20, 20, 200));
 Graph LineGraph1 = new Graph(initialPositionX + widthGraph + paddingX, initialPositionY, widthGraph, heightGraph, color (20, 20, 200));
-Graph LineGraph2 = new Graph(initialPositionX, initialPositionY + heightGraph + paddingX, widthGraph, heightGraph, color (20, 20, 200));
-Graph LineGraph3 = new Graph(initialPositionX + widthGraph + paddingX, initialPositionY + heightGraph + paddingX, widthGraph, heightGraph, color (20, 20, 200));
+Graph LineGraph2 = new Graph(initialPositionX, initialPositionY + heightGraph + paddingY, widthGraph, heightGraph, color (20, 20, 200));
+Graph LineGraph3 = new Graph(initialPositionX + widthGraph + paddingX, initialPositionY + heightGraph + paddingY, widthGraph, heightGraph, color (20, 20, 200));
 
 float[][] lineGraphValues = new float[6][100];
 float[] lineGraphSampleNumbers = new float[100];
@@ -55,7 +56,11 @@ void setup() {
   cp5 = new ControlP5(this);
   
   // build x axis values for the line graph
-  for(int i = 0; i < lineGraphValues.length; i++){
+  println(lineGraphValues.length);
+  println(lineGraphValues[0].length);
+  // k => 0 - 99
+  // i => 0 - 5
+  for(int i = 0; i < lineGraphValues.length; i++){ 
     for(int k = 0; k < lineGraphValues[0].length; k++){
       lineGraphValues[i][k] = 0;
       if(i == 0){
@@ -90,24 +95,30 @@ void draw(){
     try {
       serialPort.readBytesUntil('\r', inBuffer);
     } catch (Exception e) {
+      println(e);
     }
     myString = new String(inBuffer);
     
-    // split the string at delimiter (space)
+    // split the string at delimiter ','
     String[] nums = split(myString, ',');
     
     // build the arrays for line graphs
+    // nums.length == 4
     for(i = 0; i < nums.length; i++) {
       // update line graph
       try {
+        // lineGraphValues.length == 6
         if (i < lineGraphValues.length) {
+          // lineGraphValues[i].length == 99
+          // Serve para fazer os gráficos "andarem"
           for(int k = 0; k < lineGraphValues[i].length - 1; k++) {
             lineGraphValues[i][k] = lineGraphValues[i][k + 1];
           }
-
+          // Atualiza o último valor do gráfico com o valor da serial
           lineGraphValues[i][lineGraphValues[i].length - 1] = float(nums[i]);
         }
       } catch (Exception e) {
+        println(e);
       }
     }
   }
@@ -116,6 +127,10 @@ void draw(){
   LineGraph.DrawAxis();
   LineGraph1.DrawAxis();
   LineGraph2.DrawAxis();
+  LineGraph3.DrawAxis();
+  
+  // lineGraphValues.length == 6
+  // Devemos mudar esta parte para usar vários gráficos
   for(int i = 0; i < lineGraphValues.length; i++) {
     LineGraph.GraphColor = graphColors[i];
     if(int(getPlotterConfigString("lgVisible" + (i + 1))) == 1)
@@ -146,7 +161,7 @@ void controlEvent(ControlEvent theEvent) {
       value = theEvent.getValue() + "";
     }
     plotterConfigJSON.setString(parameter, value);
-    saveJSONObject(plotterConfigJSON, topSketchPath+"/plotter_config.json");
+    saveJSONObject(plotterConfigJSON, topSketchPath + "/plotter_config.json");
   }
   setChartSettings();
 }

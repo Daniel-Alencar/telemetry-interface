@@ -10,6 +10,5 @@ void loop() {
   String voltageString = String(sensorValue * (5.0 / 1024), 3);
  
   Serial.print(String(sensorValue) + ',' + voltageString + ',' + sensorValue + ',' + String(voltageString) + '\r');
-
   delay(50);
 }
