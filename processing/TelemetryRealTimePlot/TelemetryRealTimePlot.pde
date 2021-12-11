@@ -35,7 +35,7 @@ String topSketchPath = "";
 byte[] inBuffer = new byte[100];
 int i = 0;
 
-float timePerGraphLength = 4.80;
+float timePerGraphLength = 4.8;
 
 void setup() {
   // must conform to the number defined by 'graphsNumber'
@@ -45,7 +45,7 @@ void setup() {
   LineGraph[3] = new Graph(initialPositionX + widthGraph + paddingX, initialPositionY + heightGraph + paddingY, widthGraph, heightGraph, color (20, 20, 200));
   
   surface.setTitle("Telemetry Interface");
-  size(1100, 600);
+  size(1100, 550);
 
   // set line graph colors
   // must conform to the number defined by 'graphsNumber'
@@ -103,7 +103,7 @@ void draw(){
   if(serialPort.available() > 0){
     String myString = "";
     try {
-      serialPort.readBytesUntil('\r', inBuffer);
+      serialPort.readBytesUntil('\n', inBuffer);
     } catch (Exception e) {
       println(e);
     }
@@ -138,16 +138,14 @@ void draw(){
   LineGraph[3].DrawAxis();
   
   for(int i = 0; i < lineGraphValues.length; i++) {
-    if(i < graphsNumber) {
-      LineGraph[i].GraphColor = graphColors[i];
+    LineGraph[i].GraphColor = graphColors[i];
+    
+    if(int(getPlotterConfigString("lgVisible" + (i + 1))) == 1) {
+      LineGraph[i].LineGraph(lineGraphSampleNumbers, lineGraphValues[i]);
       
-      if(int(getPlotterConfigString("lgVisible" + (i + 1))) == 1) {
-        LineGraph[i].LineGraph(lineGraphSampleNumbers, lineGraphValues[i]);
-        
-        // sets the current value for the X axis according to time
-        LineGraph[i].xMax = millis() / 1000;
-        LineGraph[i].xMin = LineGraph[i].xMax - timePerGraphLength;
-      }
+      // sets the current value for the X axis according to time
+      LineGraph[i].xMax = millis() / 1000 + timePerGraphLength;
+      LineGraph[i].xMin = LineGraph[i].xMax - timePerGraphLength;
     }
   }
 }
@@ -156,38 +154,38 @@ void draw(){
 void setChartSettings() {
   int currentTime = millis() / 1000;
   
-  LineGraph[0].xLabel = "Time(s)";
-  LineGraph[0].yLabel = "Value(m)";
+  LineGraph[0].xLabel = "Time (s)";
+  LineGraph[0].yLabel = "Value (m)";
   LineGraph[0].Title = "Altitude";  
-  LineGraph[0].xDiv = 5;  
-  LineGraph[0].xMax = currentTime;
+  LineGraph[0].xDiv = 10;  
+  LineGraph[0].xMax = currentTime + timePerGraphLength;
   LineGraph[0].xMin = LineGraph[3].xMax - timePerGraphLength; 
   LineGraph[0].yMax = int(getPlotterConfigString("lgMaxY1")); 
   LineGraph[0].yMin = int(getPlotterConfigString("lgMinY1"));
   
-  LineGraph[1].xLabel = "Time(s)";
-  LineGraph[1].yLabel = "Value(K)";
+  LineGraph[1].xLabel = "Time (s)";
+  LineGraph[1].yLabel = "Value (K)";
   LineGraph[1].Title = "Temperature";  
   LineGraph[1].xDiv = 5;  
-  LineGraph[1].xMax = currentTime;
+  LineGraph[1].xMax = currentTime + timePerGraphLength;
   LineGraph[1].xMin = LineGraph[3].xMax - timePerGraphLength; 
   LineGraph[1].yMax = int(getPlotterConfigString("lgMaxY2")); 
   LineGraph[1].yMin = int(getPlotterConfigString("lgMinY2"));
   
-  LineGraph[2].xLabel = "Time(s)";
-  LineGraph[2].yLabel = "Value(atm)";
+  LineGraph[2].xLabel = "Time (s)";
+  LineGraph[2].yLabel = "Value (atm)";
   LineGraph[2].Title = "Pressure";  
   LineGraph[2].xDiv = 5;  
-  LineGraph[2].xMax = currentTime;
+  LineGraph[2].xMax = currentTime + timePerGraphLength;
   LineGraph[2].xMin = LineGraph[3].xMax - timePerGraphLength;  
   LineGraph[2].yMax = int(getPlotterConfigString("lgMaxY3")); 
   LineGraph[2].yMin = int(getPlotterConfigString("lgMinY3"));
   
-  LineGraph[3].xLabel = "Time(s)";
-  LineGraph[3].yLabel = "Value(m/s²)";
+  LineGraph[3].xLabel = "Time (s)";
+  LineGraph[3].yLabel = "Value (m/s²)";
   LineGraph[3].Title = "Acceleration";  
   LineGraph[3].xDiv = 5;
-  LineGraph[3].xMax = currentTime;
+  LineGraph[3].xMax = currentTime + timePerGraphLength;
   LineGraph[3].xMin = LineGraph[3].xMax - timePerGraphLength;  
   LineGraph[3].yMax = int(getPlotterConfigString("lgMaxY4")); 
   LineGraph[3].yMin = int(getPlotterConfigString("lgMinY4"));
