@@ -36,6 +36,7 @@ byte[] inBuffer = new byte[100];
 int i = 0;
 
 float timePerGraphLength = 4.8;
+Textfield[] tf = new Textfield[4];
 
 void setup() {
   // must conform to the number defined by 'graphsNumber'
@@ -95,6 +96,13 @@ void setup() {
   cp5.addTextfield("lgMaxY3").setPosition(x1, y1 +=spacing).setText(getPlotterConfigString("lgMaxY3")).setColorCaptionLabel(0).setWidth(40).setAutoClear(false);
   cp5.addTextfield("lgMinY4").setPosition(x1, y1 +=spacing).setText(getPlotterConfigString("lgMinY4")).setColorCaptionLabel(0).setWidth(40).setAutoClear(false);
   cp5.addTextfield("lgMaxY4").setPosition(x1, y1 +=spacing).setText(getPlotterConfigString("lgMaxY4")).setColorCaptionLabel(0).setWidth(40).setAutoClear(false);
+  
+  y1 += spacing;
+
+  tf[0] = cp5.addTextfield("Value1").setPosition(x1, y1 +=spacing).setText(getPlotterConfigString("Value1")).setColorCaptionLabel(0).setWidth(40).setAutoClear(false);
+  tf[1] = cp5.addTextfield("Value2").setPosition(x1, y1 +=spacing).setText(getPlotterConfigString("Value2")).setColorCaptionLabel(0).setWidth(40).setAutoClear(false);
+  tf[2] = cp5.addTextfield("Value3").setPosition(x1, y1 +=spacing).setText(getPlotterConfigString("Value3")).setColorCaptionLabel(0).setWidth(40).setAutoClear(false);
+  tf[3] = cp5.addTextfield("Value4").setPosition(x1, y1 +=spacing).setText(getPlotterConfigString("Value4")).setColorCaptionLabel(0).setWidth(40).setAutoClear(false);
 }
 
 
@@ -108,12 +116,15 @@ void draw(){
       println(e);
     }
     myString = new String(inBuffer);
+    myString = myString.substring(0, 24);
+    println(myString);
+    println(myString.length());
     
     // split the string at delimiter ','
     String[] nums = split(myString, ',');
     
     // build the arrays for line graphs
-    for(i = 0; i < nums.length; i++) {
+    for(i = 0; i < nums.length - 1; i++) {
       // update line graph
       try {
         if (i < lineGraphValues.length) {
@@ -123,6 +134,7 @@ void draw(){
           }
           // updates the last value of the graph with the value of the serial
           lineGraphValues[i][lineGraphValues[i].length - 1] = float(nums[i]);
+          tf[i].setText(nums[i]);
         }
       } catch (Exception e) {
         println(e);
@@ -159,7 +171,7 @@ void setChartSettings() {
   LineGraph[0].Title = "Altitude";  
   LineGraph[0].xDiv = 10;  
   LineGraph[0].xMax = currentTime + timePerGraphLength;
-  LineGraph[0].xMin = LineGraph[3].xMax - timePerGraphLength; 
+  LineGraph[0].xMin = currentTime; 
   LineGraph[0].yMax = int(getPlotterConfigString("lgMaxY1")); 
   LineGraph[0].yMin = int(getPlotterConfigString("lgMinY1"));
   
@@ -168,7 +180,7 @@ void setChartSettings() {
   LineGraph[1].Title = "Temperature";  
   LineGraph[1].xDiv = 5;  
   LineGraph[1].xMax = currentTime + timePerGraphLength;
-  LineGraph[1].xMin = LineGraph[3].xMax - timePerGraphLength; 
+  LineGraph[1].xMin = currentTime; 
   LineGraph[1].yMax = int(getPlotterConfigString("lgMaxY2")); 
   LineGraph[1].yMin = int(getPlotterConfigString("lgMinY2"));
   
@@ -177,7 +189,7 @@ void setChartSettings() {
   LineGraph[2].Title = "Pressure";  
   LineGraph[2].xDiv = 5;  
   LineGraph[2].xMax = currentTime + timePerGraphLength;
-  LineGraph[2].xMin = LineGraph[3].xMax - timePerGraphLength;  
+  LineGraph[2].xMin = currentTime;  
   LineGraph[2].yMax = int(getPlotterConfigString("lgMaxY3")); 
   LineGraph[2].yMin = int(getPlotterConfigString("lgMinY3"));
   
@@ -186,7 +198,7 @@ void setChartSettings() {
   LineGraph[3].Title = "Acceleration";  
   LineGraph[3].xDiv = 5;
   LineGraph[3].xMax = currentTime + timePerGraphLength;
-  LineGraph[3].xMin = LineGraph[3].xMax - timePerGraphLength;  
+  LineGraph[3].xMin = currentTime;  
   LineGraph[3].yMax = int(getPlotterConfigString("lgMaxY4")); 
   LineGraph[3].yMin = int(getPlotterConfigString("lgMinY4"));
 }

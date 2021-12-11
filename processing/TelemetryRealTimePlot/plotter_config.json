@@ -2,7 +2,11 @@
   "lgMinY4": "0",
   "lgMinY2": "0",
   "lgMinY3": "0",
+  "Value3": "0",
+  "Value4": "0",
+  "Value1": "0",
   "lgMaxY4": "5",
+  "Value2": "0",
   "lgMaxY3": "1024",
   "lgMaxY2": "5",
   "lgMaxY1": "1024",
@@ -11,6 +15,6 @@
   "lgVisible5": "0.0",
   "lgVisible6": "0.0",
   "lgVisible3": "1.0",
-  "lgVisible4": "0.0",
+  "lgVisible4": "1.0",
   "lgMinY1": "0"
 }

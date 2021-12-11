@@ -14,12 +14,12 @@
 
 - [X] Organizar estrutura de pastas do repositório
 
-- [ ] Resolver problemas que surgirem
+- [X] Resolver problemas que surgirem
 
 - [ ] Fazer modificações necessárias para o teste de telemetria
 
 ## Problemas
 
-- [ ] Último gráfico não está funcionando quando chega no valor máximo em Y
+- [X] Último gráfico não está funcionando quando chega no valor máximo em Y
 
-- [ ] Otimizar (talvez utilizar flush e utilizar '\n' no código do arduino)
+- [X] Otimizar (talvez utilizar flush e utilizar '\n' no código do arduino)
