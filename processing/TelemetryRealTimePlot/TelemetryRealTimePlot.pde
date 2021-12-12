@@ -15,14 +15,14 @@ ControlP5 cp5;
 // Settings for the plotter are saved in this file
 JSONObject plotterConfigJSON;
 
-int graphsNumber = 4; 
+int graphsNumber = 4;
 
 // plots
-int heightGraph = 125, widthGraph = 300;
-int paddingX = 185;
+int heightGraph = 191, widthGraph = 491;
+int paddingX = 150;
 int paddingY = 150;
-int initialPositionX = 175;
-int initialPositionY = 75;
+int initialPositionX = 95;
+int initialPositionY = 59;
 Graph[] LineGraph = new Graph[graphsNumber];
 
 float[][] lineGraphValues = new float[graphsNumber][100];
@@ -37,7 +37,7 @@ byte[] inBuffer = new byte[100];
 int i = 0;
 
 float timePerGraphLength = 4.8;
-Textfield[] tf = new Textfield[4];
+Textlabel[] tl = new Textlabel[4];
 
 void setup() {
   // must conform to the number defined by 'graphsNumber'
@@ -47,8 +47,8 @@ void setup() {
   LineGraph[3] = new Graph(initialPositionX + widthGraph + paddingX, initialPositionY + heightGraph + paddingY, widthGraph, heightGraph, color (20, 20, 200));
   
   surface.setTitle("Telemetry Interface");
-  size(1033, 550);
-
+  size(1280, 680);
+  
   // set line graph colors
   // must conform to the number defined by 'graphsNumber'
   graphColors[0] = color(131, 255, 20);
@@ -76,34 +76,46 @@ void setup() {
   serialPort = new Serial(this, serialPortName, 115200);
   
   // build the gui
-  int spacing = 40;
-  int x = 10, y = 15;
+  int spacing = 50;
+  int x = 1055, y = 348;
   int x1 = 1100 - 40 - 15, y1 = 15;
-
   // must conform to the number defined by 'graphsNumber'
-  cp5.addTextlabel("label1").setText("on/off").setPosition(x, y).setColor(0);
-  cp5.addToggle("lgVisible1").setPosition(x, y += 15).setValue(int(getPlotterConfigString("lgVisible1"))).setMode(ControlP5.SWITCH).setColorActive(graphColors[0]);
-  cp5.addToggle("lgVisible2").setPosition(x, y += spacing).setValue(int(getPlotterConfigString("lgVisible2"))).setMode(ControlP5.SWITCH).setColorActive(graphColors[1]);
-  cp5.addToggle("lgVisible3").setPosition(x, y += spacing).setValue(int(getPlotterConfigString("lgVisible3"))).setMode(ControlP5.SWITCH).setColorActive(graphColors[2]);
-  cp5.addToggle("lgVisible4").setPosition(x, y += spacing).setValue(int(getPlotterConfigString("lgVisible4"))).setMode(ControlP5.SWITCH).setColorActive(graphColors[3]);
-  
+  //cp5.addTextlabel("label1").setText("on/off").setPosition(x, y).setColor(0);
+  cp5.addToggle("X").setPosition(x, y).setValue(int(getPlotterConfigString("lgVisible1"))).setMode(ControlP5.SWITCH).setColorActive(graphColors[0]);
+  cp5.addToggle("Y").setPosition(x += spacing, y).setValue(int(getPlotterConfigString("lgVisible2"))).setMode(ControlP5.SWITCH).setColorActive(graphColors[1]);
+  cp5.addToggle("Z").setPosition(x += spacing, y).setValue(int(getPlotterConfigString("lgVisible3"))).setMode(ControlP5.SWITCH).setColorActive(graphColors[2]);
+  cp5.addToggle("Kalman Filter").setPosition(x += spacing, y).setValue(int(getPlotterConfigString("lgVisible4"))).setMode(ControlP5.SWITCH).setColorActive(graphColors[3]);
+  /*
   // must conform to the number defined by 'graphsNumber'
   cp5.addTextlabel("label2").setText("bounders").setPosition(x1, y1).setColor(0);
-  cp5.addTextfield("lgMinY1").setPosition(x1, y1 += 15).setText(getPlotterConfigString("lgMinY1")).setColorCaptionLabel(0).setWidth(40).setAutoClear(false);
-  cp5.addTextfield("lgMaxY1").setPosition(x1, y1 += spacing).setText(getPlotterConfigString("lgMaxY1")).setColorCaptionLabel(0).setWidth(40).setAutoClear(false);
-  cp5.addTextfield("lgMinY2").setPosition(x1, y1 += spacing).setText(getPlotterConfigString("lgMinY2")).setColorCaptionLabel(0).setWidth(40).setAutoClear(false);
-  cp5.addTextfield("lgMaxY2").setPosition(x1, y1 += spacing).setText(getPlotterConfigString("lgMaxY2")).setColorCaptionLabel(0).setWidth(40).setAutoClear(false);
-  cp5.addTextfield("lgMinY3").setPosition(x1, y1 += spacing).setText(getPlotterConfigString("lgMinY3")).setColorCaptionLabel(0).setWidth(40).setAutoClear(false);
-  cp5.addTextfield("lgMaxY3").setPosition(x1, y1 += spacing).setText(getPlotterConfigString("lgMaxY3")).setColorCaptionLabel(0).setWidth(40).setAutoClear(false);
-  cp5.addTextfield("lgMinY4").setPosition(x1, y1 += spacing).setText(getPlotterConfigString("lgMinY4")).setColorCaptionLabel(0).setWidth(40).setAutoClear(false);
-  cp5.addTextfield("lgMaxY4").setPosition(x1, y1 += spacing).setText(getPlotterConfigString("lgMaxY4")).setColorCaptionLabel(0).setWidth(40).setAutoClear(false);
-  
+  cp5.addTextfield("lgMinY1").setPosition(x, y += spacing).setText(getPlotterConfigString("lgMinY1")).setColorCaptionLabel(0).setWidth(40).setAutoClear(false);
+  cp5.addTextfield("lgMaxY1").setPosition(x, y += spacing).setText(getPlotterConfigString("lgMaxY1")).setColorCaptionLabel(0).setWidth(40).setAutoClear(false);
+  cp5.addTextfield("lgMinY2").setPosition(x, y += spacing).setText(getPlotterConfigString("lgMinY2")).setColorCaptionLabel(0).setWidth(40).setAutoClear(false);
+  cp5.addTextfield("lgMaxY2").setPosition(x, y += spacing).setText(getPlotterConfigString("lgMaxY2")).setColorCaptionLabel(0).setWidth(40).setAutoClear(false);
+  cp5.addTextfield("lgMinY3").setPosition(x, y += spacing).setText(getPlotterConfigString("lgMinY3")).setColorCaptionLabel(0).setWidth(40).setAutoClear(false);
+  cp5.addTextfield("lgMaxY3").setPosition(x, y += spacing).setText(getPlotterConfigString("lgMaxY3")).setColorCaptionLabel(0).setWidth(40).setAutoClear(false);
+  cp5.addTextfield("lgMinY4").setPosition(x, y += spacing).setText(getPlotterConfigString("lgMinY4")).setColorCaptionLabel(0).setWidth(40).setAutoClear(false);
+  cp5.addTextfield("lgMaxY4").setPosition(x, y += spacing).setText(getPlotterConfigString("lgMaxY4")).setColorCaptionLabel(0).setWidth(40).setAutoClear(false);
+  */
   y1 += spacing;
-
-  tf[0] = cp5.addTextfield("Value1").setPosition(x1, y1 += spacing).setText(getPlotterConfigString("Value1")).setColorCaptionLabel(0).setWidth(40).setAutoClear(false);
-  tf[1] = cp5.addTextfield("Value2").setPosition(x1, y1 += spacing).setText(getPlotterConfigString("Value2")).setColorCaptionLabel(0).setWidth(40).setAutoClear(false);
-  tf[2] = cp5.addTextfield("Value3").setPosition(x1, y1 += spacing).setText(getPlotterConfigString("Value3")).setColorCaptionLabel(0).setWidth(40).setAutoClear(false);
-  tf[3] = cp5.addTextfield("Value4").setPosition(x1, y1 += spacing).setText(getPlotterConfigString("Value4")).setColorCaptionLabel(0).setWidth(40).setAutoClear(false);
+  
+  tl[0] = cp5.addTextlabel("Value1")
+             .setText(getPlotterConfigString("Value1"))
+             .setPosition(initialPositionX + widthGraph + 20, initialPositionY + heightGraph + 70)
+             .setColor(255);
+  tl[1] = cp5.addTextlabel("Value2")
+             .setText(getPlotterConfigString("Value2"))
+             .setPosition(initialPositionX + widthGraph * 2 + 160, initialPositionY + heightGraph + 70)
+             .setColor(255);
+  tl[2] = cp5.addTextlabel("Value3")
+             .setText(getPlotterConfigString("Value3"))
+             .setPosition(initialPositionX + widthGraph + 20, initialPositionY + heightGraph * 2 + 220)
+             .setColor(255);
+  tl[3] = cp5.addTextlabel("Value4")
+             .setText(getPlotterConfigString("Value4"))
+             .setPosition(initialPositionX + widthGraph * 2 + 160, initialPositionY + heightGraph * 2 + 220)
+             .setColor(255);
+  setChartSettings();
 }
 
 void draw(){
@@ -131,7 +143,7 @@ void draw(){
           }
           // updates the last value of the graph with the value of the serial
           lineGraphValues[i][lineGraphValues[i].length - 1] = float(nums[i]);
-          tf[i].setText(nums[i]);
+          tl[i].setText(nums[i]);
         }
       } catch(Exception e) {
       }
