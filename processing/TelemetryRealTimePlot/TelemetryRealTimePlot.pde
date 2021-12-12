@@ -3,6 +3,7 @@ import java.awt.Frame;
 import java.awt.BorderLayout;
 import controlP5.*;
 import processing.serial.*;
+import java.util.Arrays;
 
 // serial port to connect to
 String serialPortName = Serial.list()[0];
@@ -31,7 +32,7 @@ color[] graphColors = new color[graphsNumber];
 // helper for saving the executing path
 String topSketchPath = "";
 
-// holds serial message
+// global variables
 byte[] inBuffer = new byte[100];
 int i = 0;
 
@@ -46,7 +47,7 @@ void setup() {
   LineGraph[3] = new Graph(initialPositionX + widthGraph + paddingX, initialPositionY + heightGraph + paddingY, widthGraph, heightGraph, color (20, 20, 200));
   
   surface.setTitle("Telemetry Interface");
-  size(1100, 550);
+  size(1033, 550);
 
   // set line graph colors
   // must conform to the number defined by 'graphsNumber'
@@ -88,43 +89,39 @@ void setup() {
   
   // must conform to the number defined by 'graphsNumber'
   cp5.addTextlabel("label2").setText("bounders").setPosition(x1, y1).setColor(0);
-  cp5.addTextfield("lgMinY1").setPosition(x1, y1 +=15).setText(getPlotterConfigString("lgMinY1")).setColorCaptionLabel(0).setWidth(40).setAutoClear(false);
-  cp5.addTextfield("lgMaxY1").setPosition(x1, y1 +=spacing).setText(getPlotterConfigString("lgMaxY1")).setColorCaptionLabel(0).setWidth(40).setAutoClear(false);
-  cp5.addTextfield("lgMinY2").setPosition(x1, y1 +=spacing).setText(getPlotterConfigString("lgMinY2")).setColorCaptionLabel(0).setWidth(40).setAutoClear(false);
-  cp5.addTextfield("lgMaxY2").setPosition(x1, y1 +=spacing).setText(getPlotterConfigString("lgMaxY2")).setColorCaptionLabel(0).setWidth(40).setAutoClear(false);
-  cp5.addTextfield("lgMinY3").setPosition(x1, y1 +=spacing).setText(getPlotterConfigString("lgMinY3")).setColorCaptionLabel(0).setWidth(40).setAutoClear(false);
-  cp5.addTextfield("lgMaxY3").setPosition(x1, y1 +=spacing).setText(getPlotterConfigString("lgMaxY3")).setColorCaptionLabel(0).setWidth(40).setAutoClear(false);
-  cp5.addTextfield("lgMinY4").setPosition(x1, y1 +=spacing).setText(getPlotterConfigString("lgMinY4")).setColorCaptionLabel(0).setWidth(40).setAutoClear(false);
-  cp5.addTextfield("lgMaxY4").setPosition(x1, y1 +=spacing).setText(getPlotterConfigString("lgMaxY4")).setColorCaptionLabel(0).setWidth(40).setAutoClear(false);
+  cp5.addTextfield("lgMinY1").setPosition(x1, y1 += 15).setText(getPlotterConfigString("lgMinY1")).setColorCaptionLabel(0).setWidth(40).setAutoClear(false);
+  cp5.addTextfield("lgMaxY1").setPosition(x1, y1 += spacing).setText(getPlotterConfigString("lgMaxY1")).setColorCaptionLabel(0).setWidth(40).setAutoClear(false);
+  cp5.addTextfield("lgMinY2").setPosition(x1, y1 += spacing).setText(getPlotterConfigString("lgMinY2")).setColorCaptionLabel(0).setWidth(40).setAutoClear(false);
+  cp5.addTextfield("lgMaxY2").setPosition(x1, y1 += spacing).setText(getPlotterConfigString("lgMaxY2")).setColorCaptionLabel(0).setWidth(40).setAutoClear(false);
+  cp5.addTextfield("lgMinY3").setPosition(x1, y1 += spacing).setText(getPlotterConfigString("lgMinY3")).setColorCaptionLabel(0).setWidth(40).setAutoClear(false);
+  cp5.addTextfield("lgMaxY3").setPosition(x1, y1 += spacing).setText(getPlotterConfigString("lgMaxY3")).setColorCaptionLabel(0).setWidth(40).setAutoClear(false);
+  cp5.addTextfield("lgMinY4").setPosition(x1, y1 += spacing).setText(getPlotterConfigString("lgMinY4")).setColorCaptionLabel(0).setWidth(40).setAutoClear(false);
+  cp5.addTextfield("lgMaxY4").setPosition(x1, y1 += spacing).setText(getPlotterConfigString("lgMaxY4")).setColorCaptionLabel(0).setWidth(40).setAutoClear(false);
   
   y1 += spacing;
 
-  tf[0] = cp5.addTextfield("Value1").setPosition(x1, y1 +=spacing).setText(getPlotterConfigString("Value1")).setColorCaptionLabel(0).setWidth(40).setAutoClear(false);
-  tf[1] = cp5.addTextfield("Value2").setPosition(x1, y1 +=spacing).setText(getPlotterConfigString("Value2")).setColorCaptionLabel(0).setWidth(40).setAutoClear(false);
-  tf[2] = cp5.addTextfield("Value3").setPosition(x1, y1 +=spacing).setText(getPlotterConfigString("Value3")).setColorCaptionLabel(0).setWidth(40).setAutoClear(false);
-  tf[3] = cp5.addTextfield("Value4").setPosition(x1, y1 +=spacing).setText(getPlotterConfigString("Value4")).setColorCaptionLabel(0).setWidth(40).setAutoClear(false);
+  tf[0] = cp5.addTextfield("Value1").setPosition(x1, y1 += spacing).setText(getPlotterConfigString("Value1")).setColorCaptionLabel(0).setWidth(40).setAutoClear(false);
+  tf[1] = cp5.addTextfield("Value2").setPosition(x1, y1 += spacing).setText(getPlotterConfigString("Value2")).setColorCaptionLabel(0).setWidth(40).setAutoClear(false);
+  tf[2] = cp5.addTextfield("Value3").setPosition(x1, y1 += spacing).setText(getPlotterConfigString("Value3")).setColorCaptionLabel(0).setWidth(40).setAutoClear(false);
+  tf[3] = cp5.addTextfield("Value4").setPosition(x1, y1 += spacing).setText(getPlotterConfigString("Value4")).setColorCaptionLabel(0).setWidth(40).setAutoClear(false);
 }
-
 
 void draw(){
   /* Read serial and update values */
   if(serialPort.available() > 0){
     String myString = "";
     try {
+      Arrays.fill(inBuffer, (byte)0x00);
       serialPort.readBytesUntil('\n', inBuffer);
     } catch (Exception e) {
-      println(e);
     }
     myString = new String(inBuffer);
-    myString = myString.substring(0, 24);
-    println(myString);
-    println(myString.length());
     
     // split the string at delimiter ','
     String[] nums = split(myString, ',');
     
     // build the arrays for line graphs
-    for(i = 0; i < nums.length - 1; i++) {
+    for(i = 0; i < nums.length; i++) {
       // update line graph
       try {
         if (i < lineGraphValues.length) {
@@ -136,8 +133,7 @@ void draw(){
           lineGraphValues[i][lineGraphValues[i].length - 1] = float(nums[i]);
           tf[i].setText(nums[i]);
         }
-      } catch (Exception e) {
-        println(e);
+      } catch(Exception e) {
       }
     }
   }
