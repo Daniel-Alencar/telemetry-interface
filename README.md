@@ -23,3 +23,7 @@
 - [X] Último gráfico não está funcionando quando chega no valor máximo em Y
 
 - [X] Otimizar (talvez utilizar flush e utilizar '\n' no código do arduino)
+
+## Sugestões
+
+ - [ ] Adicionar estado do foguete (subindo, caindo, etc)
