@@ -39,7 +39,10 @@ int i = 0;
 float timePerGraphLength = 4.8;
 Textlabel[] tl = new Textlabel[4];
 
+PImage img;
+
 void setup() {
+  img = loadImage(topSketchPath + "/images/Logos-09.png");
   // must conform to the number defined by 'graphsNumber'
   LineGraph[0] = new Graph(initialPositionX, initialPositionY, widthGraph, heightGraph, color (20, 20, 200));
   LineGraph[1] = new Graph(initialPositionX + widthGraph + paddingX, initialPositionY, widthGraph, heightGraph, color (20, 20, 200));
@@ -76,28 +79,29 @@ void setup() {
   serialPort = new Serial(this, serialPortName, 115200);
   
   // build the gui
-  int spacing = 50;
-  int x = 1055, y = 348;
-  int x1 = 1100 - 40 - 15, y1 = 15;
+  int x = 1055, y = 348, spacing = 50;
+  
   // must conform to the number defined by 'graphsNumber'
-  //cp5.addTextlabel("label1").setText("on/off").setPosition(x, y).setColor(0);
-  cp5.addToggle("X").setPosition(x, y).setValue(int(getPlotterConfigString("lgVisible1"))).setMode(ControlP5.SWITCH).setColorActive(graphColors[0]);
-  cp5.addToggle("Y").setPosition(x += spacing, y).setValue(int(getPlotterConfigString("lgVisible2"))).setMode(ControlP5.SWITCH).setColorActive(graphColors[1]);
-  cp5.addToggle("Z").setPosition(x += spacing, y).setValue(int(getPlotterConfigString("lgVisible3"))).setMode(ControlP5.SWITCH).setColorActive(graphColors[2]);
-  cp5.addToggle("Kalman Filter").setPosition(x += spacing, y).setValue(int(getPlotterConfigString("lgVisible4"))).setMode(ControlP5.SWITCH).setColorActive(graphColors[3]);
-  /*
-  // must conform to the number defined by 'graphsNumber'
-  cp5.addTextlabel("label2").setText("bounders").setPosition(x1, y1).setColor(0);
-  cp5.addTextfield("lgMinY1").setPosition(x, y += spacing).setText(getPlotterConfigString("lgMinY1")).setColorCaptionLabel(0).setWidth(40).setAutoClear(false);
-  cp5.addTextfield("lgMaxY1").setPosition(x, y += spacing).setText(getPlotterConfigString("lgMaxY1")).setColorCaptionLabel(0).setWidth(40).setAutoClear(false);
-  cp5.addTextfield("lgMinY2").setPosition(x, y += spacing).setText(getPlotterConfigString("lgMinY2")).setColorCaptionLabel(0).setWidth(40).setAutoClear(false);
-  cp5.addTextfield("lgMaxY2").setPosition(x, y += spacing).setText(getPlotterConfigString("lgMaxY2")).setColorCaptionLabel(0).setWidth(40).setAutoClear(false);
-  cp5.addTextfield("lgMinY3").setPosition(x, y += spacing).setText(getPlotterConfigString("lgMinY3")).setColorCaptionLabel(0).setWidth(40).setAutoClear(false);
-  cp5.addTextfield("lgMaxY3").setPosition(x, y += spacing).setText(getPlotterConfigString("lgMaxY3")).setColorCaptionLabel(0).setWidth(40).setAutoClear(false);
-  cp5.addTextfield("lgMinY4").setPosition(x, y += spacing).setText(getPlotterConfigString("lgMinY4")).setColorCaptionLabel(0).setWidth(40).setAutoClear(false);
-  cp5.addTextfield("lgMaxY4").setPosition(x, y += spacing).setText(getPlotterConfigString("lgMaxY4")).setColorCaptionLabel(0).setWidth(40).setAutoClear(false);
-  */
-  y1 += spacing;
+  cp5.addToggle("X")
+     .setPosition(x, y)
+     .setValue(int(getPlotterConfigString("lgVisible1")))
+     .setMode(ControlP5.SWITCH)
+     .setColorActive(graphColors[0]);
+  cp5.addToggle("Y")
+     .setPosition(x += spacing, y)
+     .setValue(int(getPlotterConfigString("lgVisible2")))
+     .setMode(ControlP5.SWITCH)
+     .setColorActive(graphColors[1]);
+  cp5.addToggle("Z")
+     .setPosition(x += spacing, y)
+     .setValue(int(getPlotterConfigString("lgVisible3")))
+     .setMode(ControlP5.SWITCH)
+     .setColorActive(graphColors[2]);
+  cp5.addToggle("Kalman Filter")
+     .setPosition(x += spacing, y)
+     .setValue(int(getPlotterConfigString("lgVisible4")))
+     .setMode(ControlP5.SWITCH)
+     .setColorActive(graphColors[3]);
   
   tl[0] = cp5.addTextlabel("Value1")
              .setText(getPlotterConfigString("Value1"))
@@ -115,7 +119,6 @@ void setup() {
              .setText(getPlotterConfigString("Value4"))
              .setPosition(initialPositionX + widthGraph * 2 + 160, initialPositionY + heightGraph * 2 + 220)
              .setColor(255);
-  setChartSettings();
 }
 
 void draw(){
@@ -168,6 +171,8 @@ void draw(){
       LineGraph[i].xMin = LineGraph[i].xMax - timePerGraphLength;
     }
   }
+  tint(225);
+  image(img, 597, 290, 88, 100);
 }
 
 // called each time the chart settings are changed by the user 

@@ -17,7 +17,7 @@ class Graph{
   float   xMax = 10, xMin = 0;
   float   yMaxRight = 1024, yMinRight = 0;
   
-  Graph(int x, int y, int w, int h,color k) {  // The main declaration function
+  Graph(int x, int y, int w, int h, color k) {  // The main declaration function
     xPos = x;
     yPos = y;
     Width = w;
@@ -39,7 +39,7 @@ class Graph{
     text(xLabel, xPos + Width, yPos + Height + t / 1.5);                     // x-axis Label 
     
     rotate(-PI / 2);                                               // rotate -90 degrees
-    text(yLabel, -yPos - Height / 24, xPos - t * 1.4 + 20);                   // y-axis Label  
+    text(yLabel, -yPos - Height / 10, xPos - t * 1.4 + 20);                   // y-axis Label  
     rotate(PI / 2);                                                // rotate back
     
     textSize(10); stroke(0); smooth(); strokeWeight(1);
