@@ -8,6 +8,7 @@ import java.util.Arrays;
 // serial port to connect to
 String serialPortName = Serial.list()[0];
 Serial serialPort;
+int baudRate = 115200;
 
 // interface stuff
 ControlP5 cp5;
@@ -33,24 +34,27 @@ color[] graphColors = new color[graphsNumber];
 String topSketchPath = "";
 
 // global variables
-byte[] inBuffer = new byte[100];
+byte[] inBuffer = new byte[30];
 int i = 0;
 
 float timePerGraphLength = 4.8;
 Textlabel[] tl = new Textlabel[4];
 
-PImage img;
+PImage img, icon;
 
 void setup() {
   img = loadImage(topSketchPath + "/images/Logos-09.png");
+  icon = loadImage(topSketchPath + "/images/application.png");
+  
+  surface.setTitle("Telemetry Interface");
+  surface.setIcon(icon);
+  size(1280, 680);
+  
   // must conform to the number defined by 'graphsNumber'
   LineGraph[0] = new Graph(initialPositionX, initialPositionY, widthGraph, heightGraph, color (20, 20, 200));
   LineGraph[1] = new Graph(initialPositionX + widthGraph + paddingX, initialPositionY, widthGraph, heightGraph, color (20, 20, 200));
   LineGraph[2] = new Graph(initialPositionX, initialPositionY + heightGraph + paddingY, widthGraph, heightGraph, color (20, 20, 200));
   LineGraph[3] = new Graph(initialPositionX + widthGraph + paddingX, initialPositionY + heightGraph + paddingY, widthGraph, heightGraph, color (20, 20, 200));
-  
-  surface.setTitle("Telemetry Interface");
-  size(1280, 680);
   
   // set line graph colors
   // must conform to the number defined by 'graphsNumber'
@@ -76,7 +80,7 @@ void setup() {
     }
   }
   
-  serialPort = new Serial(this, serialPortName, 115200);
+  serialPort = new Serial(this, serialPortName, baudRate);
   
   // build the gui
   int x = 1055, y = 348, spacing = 50;
@@ -134,6 +138,12 @@ void draw(){
     
     // split the string at delimiter ','
     String[] nums = split(myString, ',');
+    
+    if(nums.length < 4){
+      //println(nums.length);
+      plotterConfigJSON.setString("myString", myString);
+      saveJSONObject(plotterConfigJSON, topSketchPath + "/plotter_config.json");
+    }
     
     // build the arrays for line graphs
     for(i = 0; i < nums.length; i++) {
