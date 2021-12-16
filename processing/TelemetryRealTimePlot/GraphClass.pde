@@ -3,7 +3,6 @@ class Graph{
   int     xPos, yPos;               // location of the top left corner of the graph  
   int     Width, Height;            // Width and height of the graph
 
-
   color   GraphColor;
   color   TextColor = 255;
   color   BackgroundColor = color(32, 33, 36);  

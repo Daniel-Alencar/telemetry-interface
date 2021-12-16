@@ -34,17 +34,17 @@ color[] graphColors = new color[graphsNumber];
 String topSketchPath = "";
 
 // global variables
-byte[] inBuffer = new byte[30];
+byte[] inBuffer = new byte[100];
 int i = 0;
 
 float timePerGraphLength = 4.8;
 Textlabel[] tl = new Textlabel[4];
 
-PImage img, icon;
+PImage icon, img;
 
 void setup() {
-  img = loadImage(topSketchPath + "/images/Logos-09.png");
   icon = loadImage(topSketchPath + "/images/application.png");
+  img = loadImage(topSketchPath + "/images/Logos-10 (1).png");
   
   surface.setTitle("Telemetry Interface");
   surface.setIcon(icon);
@@ -83,29 +83,14 @@ void setup() {
   serialPort = new Serial(this, serialPortName, baudRate);
   
   // build the gui
-  int x = 1055, y = 348, spacing = 50;
-  
-  // must conform to the number defined by 'graphsNumber'
-  cp5.addToggle("X")
-     .setPosition(x, y)
-     .setValue(int(getPlotterConfigString("lgVisible1")))
-     .setMode(ControlP5.SWITCH)
-     .setColorActive(graphColors[0]);
-  cp5.addToggle("Y")
-     .setPosition(x += spacing, y)
-     .setValue(int(getPlotterConfigString("lgVisible2")))
-     .setMode(ControlP5.SWITCH)
-     .setColorActive(graphColors[1]);
-  cp5.addToggle("Z")
-     .setPosition(x += spacing, y)
-     .setValue(int(getPlotterConfigString("lgVisible3")))
-     .setMode(ControlP5.SWITCH)
-     .setColorActive(graphColors[2]);
-  cp5.addToggle("Kalman Filter")
-     .setPosition(x += spacing, y)
+  cp5.addButton("Kalman Filter")
+     .setPosition(574, 0)
+     .setSize(130, 40)
      .setValue(int(getPlotterConfigString("lgVisible4")))
-     .setMode(ControlP5.SWITCH)
-     .setColorActive(graphColors[3]);
+     .activateBy(ControlP5.RELEASE)
+     .setColorActive(#667180)
+     .setColorForeground(#444a52)
+     .setColorBackground(#30363d);
   
   tl[0] = cp5.addTextlabel("Value1")
              .setText(getPlotterConfigString("Value1"))
@@ -126,6 +111,7 @@ void setup() {
 }
 
 void draw(){
+  //cp5.setPosition(mouseX, mouseY);
   /* Read serial and update values */
   if(serialPort.available() > 0){
     String myString = "";
@@ -162,13 +148,20 @@ void draw(){
       }
     }
   }
-
+  
   // draw the line graphs
   // must conform to the number defined by 'graphsNumber'
   LineGraph[0].DrawAxis();
   LineGraph[1].DrawAxis();
   LineGraph[2].DrawAxis();
   LineGraph[3].DrawAxis();
+  
+  tint(70);
+  image(img, initialPositionX + widthGraph / 2 - 44, initialPositionY + heightGraph / 2 - 50, 88, 100);
+  image(img, initialPositionX + widthGraph / 2 + widthGraph + 60 * 2.5 - 44, initialPositionY + heightGraph / 2 - 50, 88, 100);
+  image(img, initialPositionX + widthGraph / 2 - 44, heightGraph / 2 + heightGraph + 60 * 2.5, 88, 100);
+  image(img, initialPositionX + widthGraph / 2 + widthGraph + 60 * 2.5 - 44, heightGraph / 2 + heightGraph + 60 * 2.5, 88, 100);
+  tint(255);
   
   for(int i = 0; i < lineGraphValues.length; i++) {
     LineGraph[i].GraphColor = graphColors[i];
@@ -181,8 +174,6 @@ void draw(){
       LineGraph[i].xMin = LineGraph[i].xMax - timePerGraphLength;
     }
   }
-  tint(225);
-  image(img, 597, 290, 88, 100);
 }
 
 // called each time the chart settings are changed by the user 
