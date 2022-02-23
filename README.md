@@ -23,7 +23,7 @@ Este projeto foi proposto principalmente para ser a interface dos dados enviados
 
 <p align="center">
   <h1 style="display: flex;">
-    <img alt="Software Screenshot" title="#Software-Screenshot" src="./processing/TelemetryRealTimePlot/images/Screenshot.png" />
+    <img alt="Software Screenshot" title="#Software-Screenshot" src="./TelemetryRealTimePlot/images/Screenshot.png" />
   </h1>
 </p>
 
@@ -71,7 +71,7 @@ Ao executar o programa pela primeira vez, teremos mais ou menos a seguinte visua
 
 <p align="center">
   <h1 style="display: flex;">
-    <img alt="Execution" title="#Execution" src="./processing/TelemetryRealTimePlot/images/serialPorts.png" />
+    <img alt="Execution" title="#Execution" src="./TelemetryRealTimePlot/images/serialPorts.png" />
   </h1>
 </p>
 
@@ -87,7 +87,7 @@ Observe que esta porta está no índice 0.
 
 <p align="center">
   <h1 style="display: flex;">
-    <img alt="Execution" title="#Execution" src="./processing/TelemetryRealTimePlot/images/serialPortChoice.png" />
+    <img alt="Execution" title="#Execution" src="./TelemetryRealTimePlot/images/serialPortChoice.png" />
   </h1>
 </p>
 
@@ -95,7 +95,7 @@ Assim, no código, especificamos o índice 0.
 
 <p>
   <h1 style="display: flex;">
-    <img alt="Execution" title="#Execution" src="./processing/TelemetryRealTimePlot/images/serialPortChange.png" />
+    <img alt="Execution" title="#Execution" src="./TelemetryRealTimePlot/images/serialPortChange.png" />
   </h1>
 </p>
 
@@ -109,7 +109,7 @@ Por exemplo, pode-se mudar o título do gráfico, o label do eixo X e o label do
 
 <p align="center">
   <h1 style="display: flex;">
-    <img alt="Execution" title="#Execution" src="./processing/TelemetryRealTimePlot/images/labelsChange.png" />
+    <img alt="Execution" title="#Execution" src="./TelemetryRealTimePlot/images/labelsChange.png" />
   </h1>
 </p>
 
