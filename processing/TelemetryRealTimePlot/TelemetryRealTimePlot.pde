@@ -43,6 +43,9 @@ Textlabel[] tl = new Textlabel[4];
 PImage icon, img;
 
 void setup() {
+  
+  printArray(Serial.list());
+  
   icon = loadImage(topSketchPath + "/images/application.png");
   img = loadImage(topSketchPath + "/images/logo.png");
   
