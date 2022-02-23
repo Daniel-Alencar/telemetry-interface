@@ -44,7 +44,7 @@ PImage icon, img;
 
 void setup() {
   icon = loadImage(topSketchPath + "/images/application.png");
-  img = loadImage(topSketchPath + "/images/Logos-10 (1).png");
+  img = loadImage(topSketchPath + "/images/logo.png");
   
   surface.setTitle("Telemetry Interface");
   surface.setIcon(icon);
@@ -111,7 +111,6 @@ void setup() {
 }
 
 void draw(){
-  //cp5.setPosition(mouseX, mouseY);
   /* Read serial and update values */
   if(serialPort.available() > 0){
     String myString = "";
@@ -119,6 +118,7 @@ void draw(){
       Arrays.fill(inBuffer, (byte)0x00);
       serialPort.readBytesUntil('\n', inBuffer);
     } catch (Exception e) {
+      print(e);
     }
     myString = new String(inBuffer);
     
@@ -183,15 +183,15 @@ void setChartSettings() {
   LineGraph[0].xLabel = "Time (s)";
   LineGraph[0].yLabel = "Value (m)";
   LineGraph[0].Title = "Altitude";  
-  LineGraph[0].xDiv = 10;  
+  LineGraph[0].xDiv = 5;  
   LineGraph[0].xMax = currentTime + timePerGraphLength;
   LineGraph[0].xMin = currentTime; 
   LineGraph[0].yMax = int(getPlotterConfigString("lgMaxY1")); 
   LineGraph[0].yMin = int(getPlotterConfigString("lgMinY1"));
   
   LineGraph[1].xLabel = "Time (s)";
-  LineGraph[1].yLabel = "Value (K)";
-  LineGraph[1].Title = "Temperature";  
+  LineGraph[1].yLabel = "Value (m)";
+  LineGraph[1].Title = "AltitudeFk";  
   LineGraph[1].xDiv = 5;  
   LineGraph[1].xMax = currentTime + timePerGraphLength;
   LineGraph[1].xMin = currentTime; 
@@ -199,8 +199,8 @@ void setChartSettings() {
   LineGraph[1].yMin = int(getPlotterConfigString("lgMinY2"));
   
   LineGraph[2].xLabel = "Time (s)";
-  LineGraph[2].yLabel = "Value (atm)";
-  LineGraph[2].Title = "Pressure";  
+  LineGraph[2].yLabel = "Value (m/s)";
+  LineGraph[2].Title = "Velocidade";  
   LineGraph[2].xDiv = 5;  
   LineGraph[2].xMax = currentTime + timePerGraphLength;
   LineGraph[2].xMin = currentTime;  
@@ -208,8 +208,8 @@ void setChartSettings() {
   LineGraph[2].yMin = int(getPlotterConfigString("lgMinY3"));
   
   LineGraph[3].xLabel = "Time (s)";
-  LineGraph[3].yLabel = "Value (m/s²)";
-  LineGraph[3].Title = "Acceleration";  
+  LineGraph[3].yLabel = "Value (m/s)";
+  LineGraph[3].Title = "VelocidadeFk";  
   LineGraph[3].xDiv = 5;
   LineGraph[3].xMax = currentTime + timePerGraphLength;
   LineGraph[3].xMin = currentTime;  
