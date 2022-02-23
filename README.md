@@ -23,7 +23,7 @@ Este projeto foi proposto principalmente para ser a interface dos dados enviados
 
 <p align="center">
   <h1 style="display: flex;">
-    <img alt="Software Screenshot" title="#Software-Screenshot" src="./assets/Screenshot.png" />
+    <img alt="Software" title="Software" src="./assets/Screenshot.png" />
   </h1>
 </p>
 
@@ -71,7 +71,7 @@ Ao executar o programa pela primeira vez, teremos mais ou menos a seguinte visua
 
 <p align="center">
   <h1 style="display: flex;">
-    <img alt="Execution" title="#Execution" src="./assets/serialPorts.png" />
+    <img alt="Portas serial" title="Portas serial" src="./assets/serialPorts.png" />
   </h1>
 </p>
 
@@ -87,7 +87,7 @@ Observe que esta porta está no índice 0.
 
 <p align="center">
   <h1 style="display: flex;">
-    <img alt="Execution" title="#Execution" src="./assets/serialPortChoice.png" />
+    <img alt="Porta serial escolhida" title="Porta serial escolhida" src="./assets/serialPortChoice.png" />
   </h1>
 </p>
 
@@ -95,7 +95,7 @@ Assim, no código, especificamos o índice 0.
 
 <p>
   <h1 style="display: flex;">
-    <img alt="Execution" title="#Execution" src="./assets/serialPortChange.png" />
+    <img alt="Configuração da porta serial" title="Configuração da porta serial" src="./assets/serialPortChange.png" />
   </h1>
 </p>
 
@@ -109,7 +109,7 @@ Por exemplo, pode-se mudar o título do gráfico, o label do eixo X e o label do
 
 <p align="center">
   <h1 style="display: flex;">
-    <img alt="Execution" title="#Execution" src="./assets/labelsChange.png" />
+    <img alt="Configuração de labels do gráfico" title="Configuração de labels do gráfico" src="./assets/labelsChange.png" />
   </h1>
 </p>
 
