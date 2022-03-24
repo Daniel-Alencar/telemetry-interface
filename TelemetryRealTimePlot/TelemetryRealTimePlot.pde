@@ -39,10 +39,14 @@ int i = 0;
 
 float timePerGraphLength = 4.8;
 Textlabel[] tl = new Textlabel[4];
+Textlabel parachute;
+Button warning;
+Knob myKnobA;
+PFont font;
 
 PImage icon, img;
-
 void setup() {
+  font = createFont(PFont.list()[32],20);
   printArray(Serial.list());
   
   icon = loadImage(topSketchPath + "images/application.png");
@@ -51,7 +55,7 @@ void setup() {
   surface.setTitle("Telemetry Interface");
   surface.setIcon(icon);
   size(1280, 680);
-  
+
   // must conform to the number defined by 'graphsNumber'
   LineGraph[0] = new Graph(initialPositionX, initialPositionY, widthGraph, heightGraph, color (20, 20, 200));
   LineGraph[1] = new Graph(initialPositionX + widthGraph + paddingX, initialPositionY, widthGraph, heightGraph, color (20, 20, 200));
@@ -84,10 +88,6 @@ void setup() {
   
   serialPort = new Serial(this, serialPortName, baudRate);
   
-  // build the gui
-  cp5.addButton("Kalman Filter")
-     .setValue(1);
-  
   tl[0] = cp5.addTextlabel("Value1")
              .setText(getPlotterConfigString("Value1"))
              .setPosition(initialPositionX + widthGraph + 20, initialPositionY + heightGraph + 70)
@@ -104,9 +104,26 @@ void setup() {
              .setText(getPlotterConfigString("Value4"))
              .setPosition(initialPositionX + widthGraph * 2 + 160, initialPositionY + heightGraph * 2 + 220)
              .setColor(255);
+             
+  parachute = cp5.addTextlabel("Parachute")
+               .setText(getPlotterConfigString("Parachute"))
+               .setColor(255);
+             
+  warning = cp5.addButton("Paraquedas")
+               .setValue(0)
+               .setPosition(574, 0)
+               .setSize(130,30)
+               .setLock(true)
+               .setColorBackground(#A2A0A3)
+               .setFont(font);
+     
+  setChartSettings();
+
 }
 
 void draw(){
+  
+  
   /* Read serial and update values */
   if(serialPort.available() > 0){
     String myString = "";
@@ -114,15 +131,16 @@ void draw(){
       Arrays.fill(inBuffer, (byte)0x00);
       serialPort.readBytesUntil('\n', inBuffer);
     } catch (Exception e) {
-      print(e);
+      println(e);
     }
     myString = new String(inBuffer);
+    println(myString);
     
     // split the string at delimiter ','
     String[] nums = split(myString, ',');
     
-    if(nums.length < 4){
-      //println(nums.length);
+    if(nums.length < 5){
+      println(nums.length);
       plotterConfigJSON.setString("myString", myString);
       saveJSONObject(plotterConfigJSON, topSketchPath + "/plotter_config.json");
     }
@@ -130,19 +148,29 @@ void draw(){
     // build the arrays for line graphs
     for(i = 0; i < nums.length; i++) {
       // update line graph
-      try {
-        if (i < lineGraphValues.length) {
-          // serves to make the graphics "walk"
-          for(int k = 0; k < lineGraphValues[i].length - 1; k++) {
-            lineGraphValues[i][k] = lineGraphValues[i][k + 1];
+      if(i < 4) {
+        try {
+          if (i < lineGraphValues.length) {
+            // serves to make the graphics "walk"
+            for(int k = 0; k < lineGraphValues[i].length - 1; k++) {
+              lineGraphValues[i][k] = lineGraphValues[i][k + 1];
+            }
+            // updates the last value of the graph with the value of the serial
+            lineGraphValues[i][lineGraphValues[i].length - 1] = float(nums[i]);
+            tl[i].setText(nums[i]);
           }
-          // updates the last value of the graph with the value of the serial
-          lineGraphValues[i][lineGraphValues[i].length - 1] = float(nums[i]);
-          tl[i].setText(nums[i]);
+        } catch(Exception e) {
+          println(e);
         }
-      } catch(Exception e) {
-      }
-    }
+       } else {
+         parachute.setText(nums[4]);
+         
+         int a = int(nums[4]);
+         if(a >= 1) {
+           warning.setColorBackground(#E7F6E0);
+         }
+       }
+    }    
   }
   
   // draw the line graphs
