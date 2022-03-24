@@ -86,13 +86,7 @@ void setup() {
   
   // build the gui
   cp5.addButton("Kalman Filter")
-     .setPosition(574, 0)
-     .setSize(130, 40)
-     .setValue(int(getPlotterConfigString("lgVisible4")))
-     .activateBy(ControlP5.RELEASE)
-     .setColorActive(#667180)
-     .setColorForeground(#444a52)
-     .setColorBackground(#30363d);
+     .setValue(1);
   
   tl[0] = cp5.addTextlabel("Value1")
              .setText(getPlotterConfigString("Value1"))
