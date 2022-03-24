@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import controlP5.*;
 import processing.serial.*;
 import java.util.Arrays;
+import processing.sound.*;
 
 // serial port to connect to
 String serialPortName = Serial.list()[0];
@@ -39,18 +40,23 @@ int i = 0;
 
 float timePerGraphLength = 4.8;
 Textlabel[] tl = new Textlabel[4];
-Textlabel parachute;
-Button warning;
-Knob myKnobA;
-PFont font;
 
-PImage icon, img;
+// Images
+PImage icon, img, parachute;
+
+// Sounds
+SoundFile parachuteSound;
+
 void setup() {
-  font = createFont(PFont.list()[32],20);
   printArray(Serial.list());
   
+  // Load Images
   icon = loadImage(topSketchPath + "images/application.png");
   img = loadImage(topSketchPath + "images/logo.png");
+  parachute = loadImage(topSketchPath + "images/off.png");
+  
+  // Load sounds
+  parachuteSound = new SoundFile(this, "ding.mp3");
   
   surface.setTitle("Telemetry Interface");
   surface.setIcon(icon);
@@ -104,18 +110,6 @@ void setup() {
              .setText(getPlotterConfigString("Value4"))
              .setPosition(initialPositionX + widthGraph * 2 + 160, initialPositionY + heightGraph * 2 + 220)
              .setColor(255);
-             
-  parachute = cp5.addTextlabel("Parachute")
-               .setText(getPlotterConfigString("Parachute"))
-               .setColor(255);
-             
-  warning = cp5.addButton("Paraquedas")
-               .setValue(0)
-               .setPosition(574, 0)
-               .setSize(130,30)
-               .setLock(true)
-               .setColorBackground(#A2A0A3)
-               .setFont(font);
      
   setChartSettings();
 
@@ -128,7 +122,7 @@ void draw(){
   if(serialPort.available() > 0){
     String myString = "";
     try {
-      Arrays.fill(inBuffer, (byte)0x00);
+      Arrays.fill(inBuffer, (byte)0x00); // Rever a forma de zerar o buffer
       serialPort.readBytesUntil('\n', inBuffer);
     } catch (Exception e) {
       println(e);
@@ -140,7 +134,6 @@ void draw(){
     String[] nums = split(myString, ',');
     
     if(nums.length < 5){
-      println(nums.length);
       plotterConfigJSON.setString("myString", myString);
       saveJSONObject(plotterConfigJSON, topSketchPath + "/plotter_config.json");
     }
@@ -163,11 +156,12 @@ void draw(){
           println(e);
         }
        } else {
-         parachute.setText(nums[4]);
-         
-         int a = int(nums[4]);
-         if(a >= 1) {
-           warning.setColorBackground(#E7F6E0);
+         if(int(nums[4]) >= 1) {    
+           //parachuteSound.play();
+           parachute = loadImage("images/on.png");
+         } else {
+           parachute = loadImage("images/off.png");
+           //parachuteSound.stop();
          }
        }
     }    
@@ -180,6 +174,10 @@ void draw(){
   LineGraph[2].DrawAxis();
   LineGraph[3].DrawAxis();
   
+  // Draw parachute image
+  image(parachute, 629, 10, 22, 23);
+  
+  // Draw graphics background image
   tint(70);
   image(img, initialPositionX + widthGraph / 2 - 44, initialPositionY + heightGraph / 2 - 50, 88, 100);
   image(img, initialPositionX + widthGraph / 2 + widthGraph + 60 * 2.5 - 44, initialPositionY + heightGraph / 2 - 50, 88, 100);
