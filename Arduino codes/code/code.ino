@@ -5,13 +5,12 @@ void setup() {
   Serial.begin(115200);
 }
 
-void loop() {
+void loop(){
   sensorValue = analogRead(A0);
-  String voltageString = String(sensorValue * (5.0 / 1024), 3);
- 
-  Serial.print(String(sensorValue) + ',' + String(voltageString) + ',' + String(sensorValue) + ',' + String(voltageString) + "," + String(count) + ",0" + '\n');
+  
+  Serial.print(String(sensorValue) + ',' + String(sensorValue) + ',' + String(sensorValue * 0.15) + ',' + String(sensorValue * 0.15) + "," + String(count) + '\n');
 
-  if(millis() > 10000)
+  if(millis() > 5000)
     count = 1;
-  delay(50);
+  delay(200);
 }

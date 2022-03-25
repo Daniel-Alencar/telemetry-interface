@@ -38,6 +38,11 @@ String topSketchPath = "";
 byte[] inBuffer = new byte[100];
 int i = 0;
 
+//amount of values
+int dataAmount = 5;
+
+int delay = 50; // delay do arduino em ms
+
 float timePerGraphLength = 4.8;
 Textlabel[] tl = new Textlabel[4];
 
@@ -46,6 +51,8 @@ PImage icon, img, parachute;
 
 // Sounds
 SoundFile parachuteSound;
+
+Toggle tg;
 
 void setup() {
   printArray(Serial.list());
@@ -110,38 +117,39 @@ void setup() {
              .setText(getPlotterConfigString("Value4"))
              .setPosition(initialPositionX + widthGraph * 2 + 160, initialPositionY + heightGraph * 2 + 220)
              .setColor(255);
-     
+  
   setChartSettings();
+  tg = cp5.addToggle("toggleValue")
+          .setPosition(400,300)
+          .setSize(50,20)
+          .setValue(false)
+          .setMode(ControlP5.SWITCH);
 
 }
 
 void draw(){
-  
-  
   /* Read serial and update values */
   if(serialPort.available() > 0){
-    String myString = "";
     try {
-      Arrays.fill(inBuffer, (byte)0x00); // Rever a forma de zerar o buffer
+      Arrays.fill(inBuffer, (byte)0x30);
       serialPort.readBytesUntil('\n', inBuffer);
     } catch (Exception e) {
       println(e);
     }
-    myString = new String(inBuffer);
-    println(myString);
+    
+    String myString = new String(inBuffer);
+    //println(myString);
     
     // split the string at delimiter ','
     String[] nums = split(myString, ',');
     
-    if(nums.length < 5){
+    // build the arrays for line graphs
+    if(nums.length == dataAmount){
       plotterConfigJSON.setString("myString", myString);
       saveJSONObject(plotterConfigJSON, topSketchPath + "/plotter_config.json");
-    }
-    
-    // build the arrays for line graphs
-    for(i = 0; i < nums.length; i++) {
-      // update line graph
-      if(i < 4) {
+      
+      for(i = 0; i < nums.length; i++) {
+        // update line graph
         try {
           if (i < lineGraphValues.length) {
             // serves to make the graphics "walk"
@@ -155,16 +163,17 @@ void draw(){
         } catch(Exception e) {
           println(e);
         }
-       } else {
-         if(int(nums[4]) >= 1) {    
-           //parachuteSound.play();
-           parachute = loadImage("images/on.png");
-         } else {
-           parachute = loadImage("images/off.png");
-           //parachuteSound.stop();
-         }
-       }
-    }    
+      }
+      
+      String[] parachuteBit = split(nums[dataAmount - 1], '\n');
+      if(int(parachuteBit[0]) == 1) {
+        //parachuteSound.play();
+        parachute = loadImage("images/on.png");
+      } else {
+        parachute = loadImage("images/off.png");
+        //parachuteSound.stop();
+      }
+    }
   }
   
   // draw the line graphs
