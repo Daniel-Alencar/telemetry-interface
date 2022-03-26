@@ -41,9 +41,10 @@ int i = 0;
 //amount of values
 int dataAmount = 5;
 
-int delay = 50; // delay do arduino em ms
+//delay do arduino em ms
+int delay = 50;
 
-float timePerGraphLength = 4.8;
+float timePerGraphLength = 2.74074074074071 * 0.000001 * delay * delay + 0.0973148148148148 * delay - 0.0725925925925939;
 Textlabel[] tl = new Textlabel[4];
 
 // Images
@@ -51,8 +52,6 @@ PImage icon, img, parachute;
 
 // Sounds
 SoundFile parachuteSound;
-
-Toggle tg;
 
 void setup() {
   printArray(Serial.list());
@@ -119,11 +118,6 @@ void setup() {
              .setColor(255);
   
   setChartSettings();
-  tg = cp5.addToggle("toggleValue")
-          .setPosition(400,300)
-          .setSize(50,20)
-          .setValue(false)
-          .setMode(ControlP5.SWITCH);
 
 }
 
@@ -138,7 +132,6 @@ void draw(){
     }
     
     String myString = new String(inBuffer);
-    //println(myString);
     
     // split the string at delimiter ','
     String[] nums = split(myString, ',');
@@ -201,8 +194,9 @@ void draw(){
       LineGraph[i].LineGraph(lineGraphSampleNumbers, lineGraphValues[i]);
       
       // sets the current value for the X axis according to time
-      LineGraph[i].xMax = millis() / 1000 + timePerGraphLength;
-      LineGraph[i].xMin = LineGraph[i].xMax - timePerGraphLength;
+      int currentTime = millis() / 1000;
+      LineGraph[i].xMax = currentTime;
+      LineGraph[i].xMin = currentTime - timePerGraphLength;
     }
   }
 }
@@ -214,9 +208,9 @@ void setChartSettings() {
   LineGraph[0].xLabel = "Time (s)";
   LineGraph[0].yLabel = "Value (m)";
   LineGraph[0].Title = "Altitude";  
-  LineGraph[0].xDiv = 5;  
-  LineGraph[0].xMax = currentTime + timePerGraphLength;
-  LineGraph[0].xMin = currentTime; 
+  LineGraph[0].xDiv = 5;
+  LineGraph[0].xMax = currentTime;
+  LineGraph[0].xMin = currentTime - timePerGraphLength;
   LineGraph[0].yMax = int(getPlotterConfigString("lgMaxY1")); 
   LineGraph[0].yMin = int(getPlotterConfigString("lgMinY1"));
   
@@ -224,8 +218,8 @@ void setChartSettings() {
   LineGraph[1].yLabel = "Value (m)";
   LineGraph[1].Title = "AltitudeFk";  
   LineGraph[1].xDiv = 5;  
-  LineGraph[1].xMax = currentTime + timePerGraphLength;
-  LineGraph[1].xMin = currentTime; 
+  LineGraph[1].xMax = currentTime;
+  LineGraph[1].xMin = currentTime - timePerGraphLength; 
   LineGraph[1].yMax = int(getPlotterConfigString("lgMaxY2")); 
   LineGraph[1].yMin = int(getPlotterConfigString("lgMinY2"));
   
@@ -233,8 +227,8 @@ void setChartSettings() {
   LineGraph[2].yLabel = "Value (m/s)";
   LineGraph[2].Title = "Velocidade";  
   LineGraph[2].xDiv = 5;  
-  LineGraph[2].xMax = currentTime + timePerGraphLength;
-  LineGraph[2].xMin = currentTime;  
+  LineGraph[2].xMax = currentTime;
+  LineGraph[2].xMin = currentTime - timePerGraphLength;  
   LineGraph[2].yMax = int(getPlotterConfigString("lgMaxY3")); 
   LineGraph[2].yMin = int(getPlotterConfigString("lgMinY3"));
   
@@ -242,8 +236,8 @@ void setChartSettings() {
   LineGraph[3].yLabel = "Value (m/s)";
   LineGraph[3].Title = "VelocidadeFk";  
   LineGraph[3].xDiv = 5;
-  LineGraph[3].xMax = currentTime + timePerGraphLength;
-  LineGraph[3].xMin = currentTime;  
+  LineGraph[3].xMax = currentTime;
+  LineGraph[3].xMin = currentTime - timePerGraphLength;  
   LineGraph[3].yMax = int(getPlotterConfigString("lgMaxY4")); 
   LineGraph[3].yMin = int(getPlotterConfigString("lgMinY4"));
 }
