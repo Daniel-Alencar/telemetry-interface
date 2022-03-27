@@ -213,9 +213,9 @@ void draw(){
       
       // sets the current value for the X axis according to time
       if(clear){
-        int currentTime = millis() / 1000;
-        LineGraph[i].xMax = currentTime - 2;
-        LineGraph[i].xMin = currentTime - timePerGraphLength - 2;
+        int currentTime = millis() / 1000 - 2;
+        LineGraph[i].xMax = currentTime;
+        LineGraph[i].xMin = currentTime - timePerGraphLength;
       }
     }
   }
@@ -264,11 +264,11 @@ void setChartSettings() {
 
 // get gui settings from settings file
 String getPlotterConfigString(String id) {
-  String r = "";
+  String value = "";
   try{
-    r = plotterConfigJSON.getString(id);
+    value = plotterConfigJSON.getString(id);
   } catch (Exception e) {
-    r = "";
+    value = "";
   }
-  return r;
+  return value;
 }
