@@ -23,7 +23,7 @@ Este projeto foi proposto principalmente para ser a interface dos dados enviados
 
 <p align="center">
   <h1 style="display: flex;">
-    <img alt="Software" title="Software" src="./assets/ínterface parachute off.png" />
+    <img alt="Software" title="Software" src="./assets/Interface parachute off.png" />
   </h1>
 </p>
 
