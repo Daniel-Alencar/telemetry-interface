@@ -1,8 +1,5 @@
-int sensorValue = 0;
-float voltage;
-int count = 0;
-
-int value = 0;
+int sensorValue = 0, count = 0, value = 0;
+bool notSent = false;
 
 void setup() {
   Serial.begin(115200);
@@ -10,12 +7,13 @@ void setup() {
 
 void loop(){
   sensorValue = analogRead(A0);
-
-  if(millis() % 50 == 0){
-    value = !value;
-  }
   
-  Serial.print(String(600 * value) + ',' + String(sensorValue) + ',' + String(sensorValue * 0.15) + ',' + String(sensorValue * 0.15) + "," + String(count) + '\n');
+  
+  Serial.print(String(count * 600) + ',' + String(sensorValue) + ',' + String(sensorValue * 0.15) + ',' + String(sensorValue * 0.15) + "," + String(count) + '\n');
+  if(!notSent){
+    Serial.println("INICIADO!");
+    notSent = true;
+  }
   
   if(millis() > 5000)
     count = 1;

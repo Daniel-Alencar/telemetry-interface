@@ -6,54 +6,65 @@ import processing.serial.*;
 import java.util.Arrays;
 import processing.sound.*;
 
-// serial port to connect to
+// ===================== Serial port to connect to ===================== //
 String serialPortName = Serial.list()[0];
 Serial serialPort;
 int baudRate = 115200;
 
-// interface stuff
+// ========================== Interface stuff ========================== //
 ControlP5 cp5;
 
-// Settings for the plotter are saved in this file
+// ========== Settings for the plotter are saved in this file ========== //
 JSONObject plotterConfigJSON;
 
+// =============================== Plots =============================== //
 int graphsNumber = 4;
-
-// plots
 int heightGraph = 191, widthGraph = 491;
-int paddingX = 150;
-int paddingY = 150;
-int initialPositionX = 95;
-int initialPositionY = 59;
+int paddingX = 150, paddingY = 150;
+int initialPositionX = 95, initialPositionY = 59;
+
 Graph[] LineGraph = new Graph[graphsNumber];
 
 float[][] lineGraphValues = new float[graphsNumber][100];
 float[] lineGraphSampleNumbers = new float[100];
 color[] graphColors = new color[graphsNumber];
 
-// helper for saving the executing path
-String topSketchPath = "";
-
-// global variables
-byte[] inBuffer = new byte[100];
-int i = 0;
-
-//amount of values
-int dataAmount = 5;
-
-//delay do arduino em ms
-int delay = 50;
-
-float timePerGraphLength = 2.74074074074071 * 0.000001 * delay * delay + 0.0973148148148148 * delay - 0.0725925925925939;
 Textlabel[] tl = new Textlabel[4];
 
-// Images
+// =============== Helper for saving the executing path ================ //
+String topSketchPath = "";
+
+// ========================= Global variables ========================== //
+
+// ============= Buffer ============= //
+byte[] inBuffer = new byte[100];
+
+// ============= Counter ============ //
+int i = 0;
+
+// ========= Amount of data ========= //
+int dataAmount = 5;
+
+// ====== Arduino delay in ms ======= //
+int delay = 50;
+
+// = Indicates parachute activation = //
+boolean parachuteDeactivated = true;
+
+// ==== Indicates empty garbage ===== //
+boolean clear = false;
+
+// ==== Synchronize the graphics ==== //
+float timePerGraphLength = 2.74074074074071 * 0.000001 * delay * delay + 0.0973148148148148 * delay - 0.0725925925925939;
+
+// ================================ Images ================================ //
 PImage icon, img, parachute;
 
-// Sounds
+// ================================ Sounds ================================ //
 SoundFile parachuteSound;
 
 void setup() {
+  // Print serial port array
   printArray(Serial.list());
   
   // Load Images
@@ -61,21 +72,21 @@ void setup() {
   img = loadImage(topSketchPath + "images/logo.png");
   parachute = loadImage(topSketchPath + "images/off.png");
   
-  // Load sounds
-  parachuteSound = new SoundFile(this, "ding.mp3");
+  // load sounds
+  parachuteSound = new SoundFile(this, "censorbeep8.wav", false);
   
+  // set window settings
   surface.setTitle("Telemetry Interface");
   surface.setIcon(icon);
   size(1280, 680);
 
-  // must conform to the number defined by 'graphsNumber'
+  // set graph settings
   LineGraph[0] = new Graph(initialPositionX, initialPositionY, widthGraph, heightGraph, color (20, 20, 200));
   LineGraph[1] = new Graph(initialPositionX + widthGraph + paddingX, initialPositionY, widthGraph, heightGraph, color (20, 20, 200));
   LineGraph[2] = new Graph(initialPositionX, initialPositionY + heightGraph + paddingY, widthGraph, heightGraph, color (20, 20, 200));
   LineGraph[3] = new Graph(initialPositionX + widthGraph + paddingX, initialPositionY + heightGraph + paddingY, widthGraph, heightGraph, color (20, 20, 200));
   
   // set line graph colors
-  // must conform to the number defined by 'graphsNumber'
   graphColors[0] = color(131, 255, 20);
   graphColors[1] = color(232, 158, 12);
   graphColors[2] = color(255, 0, 0);
@@ -118,11 +129,10 @@ void setup() {
              .setColor(255);
   
   setChartSettings();
-
 }
 
 void draw(){
-  /* Read serial and update values */
+  // read serial and update values
   if(serialPort.available() > 0){
     try {
       Arrays.fill(inBuffer, (byte)0x30);
@@ -133,53 +143,61 @@ void draw(){
     
     String myString = new String(inBuffer);
     
-    // split the string at delimiter ','
-    String[] nums = split(myString, ',');
+    String[] verify = split(myString, '\n');
     
-    // build the arrays for line graphs
-    if(nums.length == dataAmount){
-      plotterConfigJSON.setString("myString", myString);
-      saveJSONObject(plotterConfigJSON, topSketchPath + "/plotter_config.json");
+    if(verify[0].equals("INICIADO!\r")){
+      clear = true;
+    }
+    
+    if(clear){
+      // split the string at delimiter ','
+      String[] nums = split(myString, ',');
       
-      for(i = 0; i < nums.length; i++) {
-        // update line graph
-        try {
-          if (i < lineGraphValues.length) {
-            // serves to make the graphics "walk"
-            for(int k = 0; k < lineGraphValues[i].length - 1; k++) {
-              lineGraphValues[i][k] = lineGraphValues[i][k + 1];
+      // build the arrays for line graphs
+      if(nums.length == dataAmount){
+        plotterConfigJSON.setString("myString", myString);
+        saveJSONObject(plotterConfigJSON, topSketchPath + "/plotter_config.json");
+        
+        for(i = 0; i < nums.length; i++) {
+          // update line graph
+          try {
+            if (i < lineGraphValues.length) {
+              // serves to make the graphics "walk"
+              for(int k = 0; k < lineGraphValues[i].length - 1; k++) {
+                lineGraphValues[i][k] = lineGraphValues[i][k + 1];
+              }
+              // updates the last value of the graph with the value of the serial
+              lineGraphValues[i][lineGraphValues[i].length - 1] = float(nums[i]);
+              tl[i].setText(nums[i]);
             }
-            // updates the last value of the graph with the value of the serial
-            lineGraphValues[i][lineGraphValues[i].length - 1] = float(nums[i]);
-            tl[i].setText(nums[i]);
+          } catch(Exception e) {
+            println(e);
           }
-        } catch(Exception e) {
-          println(e);
         }
-      }
-      
-      String[] parachuteBit = split(nums[dataAmount - 1], '\n');
-      if(int(parachuteBit[0]) == 1) {
-        //parachuteSound.play();
-        parachute = loadImage("images/on.png");
-      } else {
-        parachute = loadImage("images/off.png");
-        //parachuteSound.stop();
+        
+        // indicates parachute activation
+        String[] parachuteBit = split(nums[dataAmount - 1], '\n');
+        if(parachuteDeactivated){
+          if(int(parachuteBit[0]) == 1) {
+            parachuteSound.play();
+            parachute = loadImage("images/on.png");
+            parachuteDeactivated = false;
+          }
+        }  
       }
     }
   }
   
   // draw the line graphs
-  // must conform to the number defined by 'graphsNumber'
   LineGraph[0].DrawAxis();
   LineGraph[1].DrawAxis();
   LineGraph[2].DrawAxis();
   LineGraph[3].DrawAxis();
-  
-  // Draw parachute image
+  //stop();
+  // draw parachute image
   image(parachute, 629, 10, 22, 23);
   
-  // Draw graphics background image
+  // draw graphics background image
   tint(70);
   image(img, initialPositionX + widthGraph / 2 - 44, initialPositionY + heightGraph / 2 - 50, 88, 100);
   image(img, initialPositionX + widthGraph / 2 + widthGraph + 60 * 2.5 - 44, initialPositionY + heightGraph / 2 - 50, 88, 100);
@@ -194,9 +212,11 @@ void draw(){
       LineGraph[i].LineGraph(lineGraphSampleNumbers, lineGraphValues[i]);
       
       // sets the current value for the X axis according to time
-      int currentTime = millis() / 1000;
-      LineGraph[i].xMax = currentTime;
-      LineGraph[i].xMin = currentTime - timePerGraphLength;
+      if(clear){
+        int currentTime = millis() / 1000;
+        LineGraph[i].xMax = currentTime - 2;
+        LineGraph[i].xMin = currentTime - timePerGraphLength - 2;
+      }
     }
   }
 }
@@ -240,22 +260,6 @@ void setChartSettings() {
   LineGraph[3].xMin = currentTime - timePerGraphLength;  
   LineGraph[3].yMax = int(getPlotterConfigString("lgMaxY4")); 
   LineGraph[3].yMin = int(getPlotterConfigString("lgMinY4"));
-}
-
-// handle gui actions
-void controlEvent(ControlEvent theEvent) {
-  if (theEvent.isAssignableFrom(Textfield.class) || theEvent.isAssignableFrom(Toggle.class) || theEvent.isAssignableFrom(Button.class)) {
-    String parameter = theEvent.getName();
-    String value = "";
-    if(theEvent.isAssignableFrom(Textfield.class)){
-      value = theEvent.getStringValue();
-    } else if(theEvent.isAssignableFrom(Toggle.class) || theEvent.isAssignableFrom(Button.class)) {
-      value = theEvent.getValue() + "";
-    }
-    plotterConfigJSON.setString(parameter, value);
-    saveJSONObject(plotterConfigJSON, topSketchPath + "/plotter_config.json");
-  }
-  setChartSettings();
 }
 
 // get gui settings from settings file
