@@ -56,6 +56,8 @@ boolean clear = false;
 
 // ==== Synchronize the graphics ==== //
 float timePerGraphLength = 2.74074074074071 * 0.000001 * delay * delay + 0.0973148148148148 * delay - 0.0725925925925939;
+boolean hadNotSetInterfaceDelay = true;
+int interfaceDelay = 0;
 
 // ================================ Images ================================ //
 PImage icon, img, parachute;
@@ -142,7 +144,6 @@ void draw(){
     }
     
     String myString = new String(inBuffer);
-    
     String[] verify = split(myString, '\n');
     
     if(verify[0].equals("INICIADO!\r")){
@@ -193,7 +194,7 @@ void draw(){
   LineGraph[1].DrawAxis();
   LineGraph[2].DrawAxis();
   LineGraph[3].DrawAxis();
-  //stop();
+
   // draw parachute image
   image(parachute, 629, 10, 22, 23);
   
@@ -213,7 +214,13 @@ void draw(){
       
       // sets the current value for the X axis according to time
       if(clear){
-        int currentTime = millis() / 1000 - 2;
+        
+        if(hadNotSetInterfaceDelay) {
+          interfaceDelay = millis();
+          hadNotSetInterfaceDelay = false;
+        }
+        int currentTime = (millis() - interfaceDelay) / 1000;
+        
         LineGraph[i].xMax = currentTime;
         LineGraph[i].xMin = currentTime - timePerGraphLength;
       }
