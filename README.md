@@ -52,11 +52,13 @@ OBS.: Estas configurações descrevem os limites de valores (mínimos e máximos
 # Passo-a-passo
 
 - Baixe e instale a [IDE do processing](https://processing.org/download).
-- Clone este repositório
+- Instale as seguintes bibliotecas na IDE:
+  - ControlP5
+  - Sound
+- Clone este repositório:
 ```bash
 $ git clone https://github.com/Daniel-Alencar/telemetry-interface
 ```
-
 - Abra o arquivo TelemetryRealTimePlot.pde com a IDE do processing.
 - Clique em executar (canto superior esquerdo da IDE).
 
@@ -76,14 +78,11 @@ Ao executar o programa pela primeira vez, teremos mais ou menos a seguinte visua
 </p>
 
 Isto indica todas as portas serial que foram indentificadas em seu dispositivo.
-
-Você deve especificar no código a porta serial que está sendo utilizada em seu arduino. Para isto:
-
-- Veja o número do índice que aparece a esquerda da porta desejada e coloque este número para ser o índice escolhido como porta serial em que o programa irá conectar-se. Modifique o índice no valor da variável String serialPortName.
+Você deve especificar no código a porta serial que está sendo utilizada em seu arduino. Para isto,
+veja o número do índice que aparece a esquerda da porta desejada e coloque este número para ser o índice escolhido como porta serial em que o programa irá conectar-se. Modifique o índice no valor da variável String serialPortName.
 
 Exemplo: Especificar a porta serial "/dev/ttyACM0" no código.
-
-Observe que esta porta está no índice 0.
+Observe que esta porta está no índice 0 no nosso console.
 
 <p align="center">
   <h1 style="display: flex;">
@@ -102,7 +101,6 @@ Assim, no código, especificamos o índice 0.
 OBS.: Observe acima que também é possível mudar a taxa de baud, caso esta taxa esteja diferente da taxa do código do arduino.
 
 É possível também modificar os labels dos gráficos para atender a ordem e os tipos de dados enviados pela serial.
-
 Esta mudança é feita dentro da função setChartSettings(). 
 
 Por exemplo, pode-se mudar o título do gráfico, o label do eixo X e o label do eixo Y mudando as strings marcadas em vermelho a seguir.
@@ -136,6 +134,6 @@ OBS.: Os valores devem ser colocados como strings.
 1. O programa não exibirá os gráficos se não for possível se conectar com a porta serial correta.
 2. Até agora, o programa trabalha somente com quatro gráficos, ou seja, só podem haver quatro dados da serial para que estes sejam exibidos no programa.
 3. O padrão de escrita na serial segue o padrão CSV. Exemplo:
-- 1022,4.990,1022,4.990
-- 1022,4.990,1022,4.990
-- 1022,4.990,1022,4.990
+    - 1022,4.990,1022,4.990
+    - 1022,4.990,1022,4.990
+    - 1022,4.990,1022,4.990
